@@ -1,0 +1,205 @@
+.loginbox {
+    width: 300px;
+    height: auto;
+    margin-top: 5%;
+}
+.modal {
+  width: 300px;
+  height: auto;
+  display: block;
+  margin: 20%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  background: #fff;
+  opacity: 0;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+/* sm */
+@media (min-width: 768px) {
+    .loginbox {
+    width: 500px;
+    }
+    .modal {
+      width: 400px;
+      height: auto;
+      display: block;
+      margin: -200px;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      background: #fff;
+      opacity: 0;
+      -webkit-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
+    }
+}
+/* md */
+@media (min-width: 992px) {
+    .loginbox {
+    width: 500px;
+    }
+    .modal {
+      width: 400px;
+      height: auto;
+      display: block;
+      margin: -250px;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      background: #fff;
+      opacity: 0;
+      -webkit-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
+    }
+}
+/* lg */
+@media (min-width: 1200px) {
+    .loginbox {
+    width: 600px;
+    }
+    .bordaRounded{
+      border-radius: 50px;
+    }
+    .modal {
+      width: 400px;
+      height: auto;
+      display: block;
+      margin: -200px;
+      position: relative;
+      /* top: 50%; */
+      /* left: 50%; */
+      /* right: 50%; */
+      background: #fff;
+      opacity: 0;
+      -webkit-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
+    }
+}
+body{
+background: #e4f5fc; /* Old browsers */
+background: -moz-linear-gradient(left, #e4f5fc 0%, #9fd8ef 24%, #2ab0ed 88%); /* FF3.6-15 */
+background: -webkit-linear-gradient(left, #e4f5fc 0%,#9fd8ef 24%,#2ab0ed 88%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to right, #e4f5fc 0%,#9fd8ef 24%,#2ab0ed 88%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f5fc', endColorstr='#2ab0ed',GradientType=1 ); /* IE6-9 */
+}
+
+.modal-wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(41, 171, 164, 0.8);
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+
+.modal-wrapper.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pulse {
+  animation: pulse 3s infinite;
+  margin: 0 auto;
+  display: table;
+  margin-top: 50px;
+  animation-direction: alternate;
+  -webkit-animation-name: pulse;
+  animation-name: pulse;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.1);
+  }
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.modal-wrapper.open .modal {
+  margin-top: -240px;
+  opacity: 1;
+}
+
+.head {
+  width: auto;
+  height: auto;
+  padding: 12px 30px;
+  overflow: hidden;
+  background: #e4f5fc;
+}
+
+.btn-close {
+  font-size: 28px;
+  display: block;
+  float: right;
+  color: #fff;
+}
+
+.content { 
+  padding: 10%; 
+  text-align: center;
+}
+
+.blur-it {
+  -webkit-filter: blur(4px);
+  filter: blur(4px);
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 31px;
+  height: 31px;
+  margin: 6px;
+  border: 6px solid rgb(255, 0, 0);
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: rgb(255, 0, 0) transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
