@@ -1,14 +1,20 @@
 <?php
 class db {
-
-
 	function conectar(){
-        $con = new PDO("mysql:host=localhost;dbname=ArduinoWebAccessController", "root", "root");
-		return $conn;
+		$con = new PDO("mysql:host=localhost;dbname=arduinowebaccesscontroller", "root", "");
+		$con->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$con->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		return $con;
 	}
 
-	function seleciona(){
-
+	function seleciona($cpf){
+		$conexao = $this->conectar();
+		$sql  = "SELECT id FROM usuario where CPF = '$cpf'";
+		$stmt = $conexao->prepare($sql);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+	
+		return $stmt;
 	}
 
 	function insere(){
