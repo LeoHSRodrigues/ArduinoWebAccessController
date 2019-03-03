@@ -4,10 +4,10 @@
     margin-top: 5%;
 }
 .modal {
-  width: 300px;
+  width: 350px;
   height: auto;
   display: block;
-  margin: 20%;
+  margin: -150px;
   position: relative;
   top: 50%;
   left: 50%;
@@ -25,7 +25,7 @@
       width: 400px;
       height: auto;
       display: block;
-      margin: -200px;
+      margin: -150px;
       position: relative;
       top: 50%;
       left: 50%;

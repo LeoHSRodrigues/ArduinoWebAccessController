@@ -73,20 +73,20 @@
   </div>
 
 
-<div class="modal-wrapper">
-  <div class="modal">
-    <div class="head">
-      <a class="btn-close trigger" href="#">
-        <span><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></span>
-      </a>
-    </div>
-    <div class="content">
-      <p>Aproxime o cartão da leitora</p>
-      <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px">
-      <div id="loading"></div>
+  <div class="modal-wrapper">
+    <div class="modal">
+      <div class="head">
+        <a class="btn-close trigger" href="#">
+          <span><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></span>
+        </a>
+      </div>
+      <div class="content">
+        <p>Aproxime o cartão da leitora</p>
+        <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px">
+        <div id="loading"></div>
+      </div>
     </div>
   </div>
-</div>
 
 </body>
 <script type="text/javascript">
@@ -131,25 +131,21 @@
 	$('.trigger').on('click', function() {
   $('.modal-wrapper').toggleClass('open');
   $('.page-wrapper').toggleClass('blur-it');
+  $("#loading").html('<div class="lds-ring"><div></div><div></div><div></div><div></div><br/>');
   $.ajax({
     type: "POST",
     url: "../PHP/autenticar.php",
         success: function(msg){
-          console.log(msg);
-            // $(".content").html('<p>oi</p>');
-            // $("#loading").html('<div class="lds-ring"><div></div><div></div><div></div><div></div><br/>');
-               // some suff there
-        },
-        error: function(msg){
-          console.log(msg);
-            // $(".content").html('<p>oi</p>');
-            // $("#loading").html('<div class="lds-ring"><div></div><div></div><div></div><div></div><br/>');
-               // some suff there
+          if (msg == 'achou'){
+            // chamar nova div pra digitar a senha de 4 dígitos
+          }
+          else{
+            // chamar tag n existe
+          }
         }
     })
   return false;
 });
-
 $(document).keyup(function(event){
       if(event.which=='27' || event.which=='192' ){
           $('.modal-wrapper').toggleClass('open');
@@ -179,7 +175,13 @@ $(document).keyup(function(event){
       data: formData,
       success: function(data)
       {
-        window.location.href = "home.html";
+        if (data == 'cadastrado'){
+          window.location.href = "../PHP/home.php";
+        }
+        else{
+          $('#erro').css('display', 'block');
+          $('#erro').html("<span>Usuário ou senha Incorreto!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></span>");
+        }
       },
       error: function(data){
         $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});

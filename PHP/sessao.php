@@ -1,13 +1,13 @@
 <?php
 
 session_start();
-
-if (isset($_SESSION['atividade']) && (time() - $_SESSION['atividade'] > 21600)) {
+if (isset($_SESSION['atividade']) || (time() - $_SESSION['atividade'] > 21600)) {
   session_destroy();
   session_unset();
-  header('HTTP/1.0 400 Bad error');
-  exit;
+  echo 'cabo';
 }
-$_SESSION['atividade'] = time();
-
+else{
+  $_SESSION['atividade'] = time();
+  echo $_SESSION['atividade'];
+}
 ?>

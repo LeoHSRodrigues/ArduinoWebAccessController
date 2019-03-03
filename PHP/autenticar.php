@@ -1,26 +1,40 @@
 <?php
 session_start();
 require_once('db.class.php');
+$banco = new db();
 if(isset($_POST['acesso']) && ($_POST['acesso'] == 'normal')) {
-    $banco = new db();
     $usuario = $_POST['cpf'];
-    $senha = $_POST['senha'];
-    $acesso = $_POST['acesso'];
-    $resultado = $banco->seleciona($usuario);
+    $senha = hash('sha512', $_POST['senha']);
+    $resultado = $banco->seleciona1($usuario,$senha);
     $teste = $resultado->rowCount();
     if ($teste < 1){
-        header('HTTP/1.0 400 Bad error');
-        exit;
+        echo 'n cadastrado';
+        ob_end_flush();
     }
     else{
         $_SESSION['atividade'] = time();
+        echo 'cadastrado';
+        ob_end_flush();
     }
 }
+else{
+    //echo 'O nome foi '.$usuario. ' e a senha ' . $senha;
+    //sleep(1);
+    ini_set('max_execution_time', 5);
+    $output= shell_exec('PowerShell -ExecutionPolicy Bypass -Command "'. __DIR__ .'\lerRFID.ps1"');
+    //$resultado = trim($output);
+    $tagHasheado = hash('sha512', trim($output));
+    $resultado = $banco->seleciona($tagHasheado);
+    $teste = $resultado->rowCount();
+    if ($teste < 1){
+        echo 'n achou';
+        ob_end_flush();
+        exit;
+    }
     else{
-        // echo 'O nome foi '.$usuario. ' e a senha ' . $senha;
-                // ini_set('max_execution_time', 3);
-                // $output= shell_exec('PowerShell -ExecutionPolicy Bypass -Command "'. __DIR__ .'\lerRFID.ps1"');
-                // echo $output;
+        echo 'achou';
+        ob_end_flush();
+                }
 
     }
 ?>

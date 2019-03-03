@@ -7,9 +7,18 @@ class db {
 		return $con;
 	}
 
-	function seleciona($cpf){
+	function seleciona($valor){
 		$conexao = $this->conectar();
-		$sql  = "SELECT id FROM usuario where CPF = '$cpf'";
+		$sql  = "SELECT id FROM usuario where TAGRFID = '$valor'";
+		$stmt = $conexao->prepare($sql);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+	
+		return $stmt;
+	}
+	function seleciona1($cpf,$senha){
+		$conexao = $this->conectar();
+		$sql  = "SELECT id FROM usuario where CPF = '$cpf' and senha = '$senha'";
 		$stmt = $conexao->prepare($sql);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);

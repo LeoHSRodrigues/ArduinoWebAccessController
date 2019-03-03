@@ -1,3 +1,15 @@
+<?php
+session_start();
+if (isset($_SESSION['atividade']) && (time() - $_SESSION['atividade'] > 21600)) {
+  session_destroy();
+  session_unset();
+  echo '<script>window.location.href = "../HTML/login.html";</script>';
+}
+$_SESSION['atividade'] = time();
+if(isset($_SESSION['atividade']))
+{
+?>
+
 <link href="../CSS/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link href="../Bibliotecas/Font-Awesome/css/all.min.css" rel="stylesheet">
 <link href="../CSS/home.css" rel="stylesheet">
@@ -112,7 +124,7 @@
       <a href="#">
         <i class="fa fa-cog"></i>
       </a>
-      <a href="#">
+      <a href="logout.php">
         <i class="fa fa-power-off"></i>
       </a>
     </div>
@@ -153,3 +165,10 @@
 </div>
 </body>
 </html>
+<?php
+} else {
+    header("Location: login.php");
+    exit();
+  }
+
+?>
