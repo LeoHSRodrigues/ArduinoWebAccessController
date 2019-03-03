@@ -62,10 +62,9 @@ if (isset($_GET['editar']) && $_GET['editar'] == 'home'){
             alt="User picture">
           </div>
           <div class="user-info">
-            <span class="user-name">Nome
-              <strong>Maluco</strong>
+            <span class="user-name"><strong><?php echo $_SESSION['nome']?></strong>
             </span>
-            <span class="user-role">Tipo de Conta</span>
+            <span class="user-role"><?php echo $_SESSION['tipoConta']?></span>
           </div>
         </div>
         <div class="sidebar-menu">
@@ -101,6 +100,9 @@ if (isset($_GET['editar']) && $_GET['editar'] == 'home'){
                 </ul>
               </div>
             </li>
+            <?php
+            if ($_SESSION['permissao'] === 'adm'){
+              ?>
             <li class="sidebar-dropdown">
               <a href="#">
                 <i class="fas fa-user-tie"></i>
@@ -120,6 +122,9 @@ if (isset($_GET['editar']) && $_GET['editar'] == 'home'){
                 </ul>
               </div>
             </li>
+            <?php
+          }
+          ?>
             <li class="header-menu">
               <span>Extra</span>
             </li>
@@ -157,7 +162,7 @@ if (isset($_GET['editar']) && $_GET['editar'] == 'home'){
         ?>
       </div>
     </main>
-  </div>
+</div>
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
