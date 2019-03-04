@@ -26,6 +26,15 @@ class db {
 		
 		return $stmt;
 	}
+	function seleciona2($senha){
+		$conexao = $this->conectar();
+		$sql  = "SELECT nome, tipoConta FROM usuario where senha4 = '$senha'";
+		$stmt = $conexao->prepare($sql);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		
+		return $stmt;
+	}
 
 	function insere(){
 

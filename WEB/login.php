@@ -19,13 +19,13 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
       $_SESSION['nome'] = $dados[0]['nome'];
       $_SESSION['permissao'] = $dados[0]['tipoConta'];
       if($dados[0]['tipoConta'] == 'adm'){
-      $_SESSION['tipoConta'] = 'Administrador';
+        $_SESSION['tipoConta'] = 'Administrador';
       }
       else if($dados[0]['tipoConta'] == 'func'){
-      $_SESSION['tipoConta'] = 'Funcionário';
+        $_SESSION['tipoConta'] = 'Funcionário';
       }
       else{
-      $_SESSION['tipoConta'] = 'Usuário';
+        $_SESSION['tipoConta'] = 'Usuário';
       }
       header("Location:home.php");
     }
@@ -85,7 +85,7 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
 
 
         <div class="form-group input-group col-sm-12 mx-auto">
-          
+
           <div class="form-group input-group col-sm-8 mx-auto">
             <label for="CPF">CPF</label>
             <div class="input-group"></div>
@@ -120,7 +120,6 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
     </div>
   </div>
 
-
   <div class="modal-wrapper">
     <div class="modal">
       <div class="head">
@@ -129,25 +128,28 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
         </a>
       </div>
       <div class="content">
-        <p>Aproxime o cartão da leitora</p>
-        <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px">
-        <div id="loading"></div>
+        <div class="imagemRFID">
+          <p>Aproxime o cartão da leitora</p>
+          <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px"></div>
+          <div class="erro"></div>
+          <div id="loading" style="display:none" ><form id="formRFID" autocomplete="off"><label for="senha">Senha</label><input type="password" id="senha" name="senhaRFID" class="form-control" placeholder="Digite a sua senha"><input type="submit" name="enviar" id="enviar"  class="btn btn-primary" value="Entrar"></form></div>
+        <div id="erro"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-</body>
-<script type="text/javascript">
-  $(document).ready(function() {
+  </body>
+  <script type="text/javascript">
+    $(document).ready(function() {
 
-   $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
+     $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
 
-   $('.toast').toast('show');
+     $('.toast').toast('show');
 
-   
-   $('#senha').bind("keyup focusout", function () {
-    if($("#senha").val().length > 5) {
-      if( !isValidSenha(document.getElementById('senha').value)) { 
+
+     $('#senha').bind("keyup focusout", function () {
+      if($("#senha").val().length > 5) {
+        if( !isValidSenha(document.getElementById('senha').value)) { 
         // $("#senha").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
         $( "#validadorSenha" ).removeClass( "fas fa-check");
         $( "#validadorSenha" ).addClass( "fas fa-times");
@@ -161,8 +163,8 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
           $('#enviar').prop("disabled", false);
         }}
       });
-   $('#CPF').focusout(function(){
-    if($("#CPF").val().length < 11) {
+     $('#CPF').focusout(function(){
+      if($("#CPF").val().length < 11) {
         // $("#senha").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
         $( "#validadorCPF" ).removeClass( "fas fa-check");
         $( "#validadorCPF" ).addClass( "fas fa-times");
@@ -176,47 +178,75 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
     });
 
 
-   $('.trigger').on('click', function() {
-    $('.modal-wrapper').toggleClass('open');
-    $('.page-wrapper').toggleClass('blur-it');
-    $("#loading").html('<div class="lds-ring"><div></div><div></div><div></div><div></div><br/>');
-    $.ajax({
-      type: "POST",
-      url: "../PHP/autenticar.php",
-      success: function(msg){
-        if (msg == 'achou'){
-            // chamar nova div pra digitar a senha de 4 dígitos
+     $('.trigger').on('click', function() {
+      $('.modal-wrapper').toggleClass('open');
+      $('.page-wrapper').toggleClass('blur-it');
+
+      $.ajax({
+        type: "POST",
+        url: "autenticar.php",
+        success: function(msg){
+          if (msg == 'achou'){
+            $( ".imagemRFID" ).remove();
+            $("#loading").css('display','block');
           }
           else{
-            // chamar tag n existe
+            $( ".imagemRFID" ).remove();
+            $("#loading").html("<div class='alert alert-danger' style='text-align:center;' role='alert'>Cartão Não Cadastrado!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
           }
         }
       })
-    return false;
-  });
-   $(document).keyup(function(event){
-    if(event.which=='27' || event.which=='192' ){
-      $('.modal-wrapper').toggleClass('open');
-      $('.page-wrapper').toggleClass('blur-it');
-      $.ajax({
-        type: "POST",
-        url: "../PHP/autenticar.php",
-        success: function(msg){
+      return false;
+    });
+     $(document).keyup(function(event){
+      if(event.which=='27' || event.which=='192' ){
+        $('.modal-wrapper').toggleClass('open');
+        $('.page-wrapper').toggleClass('blur-it');
+        $.ajax({
+          type: "POST",
+          url: "autenticar.php",
+          success: function(msg){
           //  alert( "Data Saved: " + msg );
                // some suff there
              }
            })
-    }
+      }
+    });
+
+
+   });
+ </script>
+ <script>
+
+  $("#formRFID").submit(function(e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var formData = new FormData(this);
+    $.ajax({
+      type: "POST",
+      url: "autenticarRFID.php",
+      data: formData,
+      success: function(data)
+      {
+        if (data == 'cadastrado'){
+          window.location.href = "../WEB/home.php";
+        }
+        else{
+          $('#erro').css('display', 'block');
+          $('#erro').html("<div style='text-align:center;' class='alert alert-danger' role='alert'><span>Senha Incorreta!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></span></div>");
+        }
+      },
+      cache: false,
+      contentType: false,
+      processData: false
+    });
+    return false;
   });
 
-
- });
 </script>
 <script>
   $("form#meuForm").submit(function(e) {
     $('#CPF').unmask();
-  });
-  
+  });  
   function isValidSenha(senha) {
     var pattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     return pattern.test(senha);
