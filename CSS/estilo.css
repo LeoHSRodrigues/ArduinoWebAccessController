@@ -3,55 +3,16 @@
     height: auto;
     margin-top: 5%;
 }
-.modal {
-  width: 350px;
-  height: auto;
-  display: block;
-  margin: -150px;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  background: #fff;
-  opacity: 0;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
-}
 /* sm */
 @media (min-width: 768px) {
     .loginbox {
     width: 500px;
-    }
-    .modal {
-      width: 400px;
-      height: auto;
-      display: block;
-      margin: -150px;
-      position: relative;
-      top: 50%;
-      left: 50%;
-      background: #fff;
-      opacity: 0;
-      -webkit-transition: all 0.5s ease-in-out;
-      transition: all 0.5s ease-in-out;
     }
 }
 /* md */
 @media (min-width: 992px) {
     .loginbox {
     width: 500px;
-    }
-    .modal {
-      width: 400px;
-      height: auto;
-      display: block;
-      margin: -250px;
-      position: relative;
-      top: 50%;
-      left: 50%;
-      background: #fff;
-      opacity: 0;
-      -webkit-transition: all 0.5s ease-in-out;
-      transition: all 0.5s ease-in-out;
     }
 }
 /* lg */
@@ -62,20 +23,6 @@
     .bordaRounded{
       border-radius: 50px;
     }
-    .modal {
-      width: 400px;
-      height: auto;
-      display: block;
-      margin: -200px;
-      position: relative;
-      /* top: 50%; */
-      /* left: 50%; */
-      /* right: 50%; */
-      background: #fff;
-      opacity: 0;
-      -webkit-transition: all 0.5s ease-in-out;
-      transition: all 0.5s ease-in-out;
-    }
 }
 body{
 background: #e4f5fc; /* Old browsers */
@@ -85,23 +32,6 @@ background: linear-gradient(to right, #e4f5fc 0%,#9fd8ef 24%,#2ab0ed 88%); /* W3
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f5fc', endColorstr='#2ab0ed',GradientType=1 ); /* IE6-9 */
 }
 
-.modal-wrapper {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(41, 171, 164, 0.8);
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: all 0.25s ease-in-out;
-  transition: all 0.25s ease-in-out;
-}
-
-.modal-wrapper.open {
-  opacity: 1;
-  visibility: visible;
-}
 
 .pulse {
   animation: pulse 3s infinite;
@@ -137,34 +67,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f5fc', end
   }
 }
 
-.modal-wrapper.open .modal {
-  margin-top: -240px;
-  opacity: 1;
-}
-
-.head {
-  width: auto;
-  height: auto;
-  padding: 12px 30px;
-  overflow: hidden;
-  background: #e4f5fc;
-}
-
-.btn-close {
-  font-size: 28px;
-  display: block;
-  float: right;
-  color: #fff;
-}
-
-.content { 
-  padding: 10%; 
-  text-align: center;
-}
-
-.blur-it {
-  -webkit-filter: blur(4px);
-  filter: blur(4px);
+body.modal-open .main_container{
+    -webkit-filter: blur(1px);
+    -moz-filter: blur(1px);
+    -o-filter: blur(1px);
+    -ms-filter: blur(1px);
+    filter: blur(1px);
 }
 
 .lds-ring {
