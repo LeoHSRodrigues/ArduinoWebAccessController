@@ -36,8 +36,18 @@ class db {
 		return $stmt;
 	}
 
-	function insere(){
-
+	function insere($nome,$CPF,$senha){
+		try {
+			$conexao = $this->conectar();
+			$sql = "INSERT INTO usuario (nome, CPF, senha) VALUES (?,?,?)";
+			$conexao->prepare($sql)->execute([$nome, $CPF, $senha]);
+			$_SESSION['msg'] = "<div class='alert alert-success' style='text-align: center;' role='alert'>Usuário Cadastrado!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
+			header("Location:login.php");
+			exit();
+		}
+		catch (Exception $e) {
+			$_SESSION['msg'] = "<div class='alert alert-danger' style='text-align: center;' role='alert'>Erro! CPF já cadastrado<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
+		}
 
 	}
 
@@ -50,9 +60,8 @@ class db {
 
 	}
 
-	function LiberaMemoria($result){
+	function LiberaMemoria(){
 
-		mysql_free_result($result);
 
 	}
 

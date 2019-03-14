@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
   require_once('db.class.php');
   $banco = new db();
@@ -60,7 +60,7 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
         <p style="line-height: 0.1;" class="font-weight-light">CPF:</p>
         <small>O campo CPF deve possuir 11 caracteres.</small><br/><br/>
         <p style="line-height: 0.1;" class="font-weight-light">Senha:</p>
-        <small>O campo senha deve possuir no mínimo 8 caracteres com letras maiúsculas, minúsculas, números e especiais.</small>
+        <small>O campo senha deve possuir no mínimo 4 caracteres.</small>
       </div>
     </div>
 
@@ -69,7 +69,7 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
         <div class="card-body mx-auto">
           <h5 class="card-title center_text">LOGIN</h5>
         </div>
-        <form class="" method="post" id="meuForm" autocomplete="off" action="login.php?acao=salvar">
+        <form class="" method="post" id="meuForm" autocomplete="off" >
 
 
           <div class="msg_erro">
@@ -109,6 +109,8 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
               <input type="submit" disabled name="enviar" id="enviar"  class="btn btn-primary" value="Entrar">
               <br/>
               <br/>
+              <a href="cadastro.php">Criar Cadastro</a><br/>
+              <a href="esqueci.php">Esqueci a Senha</a><br/>
               <span>Entrar com Cartão RFID</span>
               <hr>
               <a href="#" data-toggle="modal" data-target="#myModal"><img src="../Imagens/loginwithRFID.png" alt="RFID" height="70" width="70"></a>
@@ -146,28 +148,24 @@ if(isset($_GET['acao']) && $_GET['acao'] == 'salvar')
   </body>
   <script type="text/javascript">
     $(document).ready(function() {
-
-      $('#CPF').focus();
-
      $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
 
      $('.toast').toast('show');
 
 
      $('#senha').bind("keyup focusout", function () {
-      if($("#senha").val().length > 5) {
-        if( !isValidSenha(document.getElementById('senha').value)) { 
+      if($("#senha").val().length < 5) {
           $( "#validadorSenha" ).removeClass( "fas fa-check");
           $( "#validadorSenha" ).addClass( "fas fa-times");
           $( "#senha" ).addClass("bg-danger text-white");
           $('#enviar').prop("disabled", true);
-          ;}
+          }
           else{
             $( "#senha" ).removeClass("bg-danger text-white");
             $( "#validadorSenha" ).removeClass( "fas fa-times");
             $( "#validadorSenha" ).addClass( "fas fa-check");
             $('#enviar').prop("disabled", false);
-          }}
+          }
         });
      $('#CPF').focusout(function(){
       if($("#CPF").val().length < 11) {
