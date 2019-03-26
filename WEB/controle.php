@@ -19,7 +19,45 @@ require_once('sessao.php');
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Home</title>
 </head>
+<style>
+    .container-fluid{
+        margin-top: 100px;
+    }
+    .cards {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+}
 
+.titles {
+  color: grey;
+  font-size: 18px;
+}
+
+.botao {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.teste {
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+}
+
+button:hover, a:hover {
+  opacity: 0.7;
+}
+    </style>
 <body>
   <div class="page-wrapper chiller-theme toggled">
     <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
@@ -128,35 +166,37 @@ require_once('sessao.php');
     </nav>
     <main class="page-content">
       <div class="container-fluid">
-        <div class="row">
-          <div class="card text-white bg-primary mb-3 col-sm-6 " onclick="location.href='controle.php';"
-          style="max-width: 18rem; cursor: pointer;">
-          <div class="card-header">Controle de Acesso</div>
-          <div class="card-body">
-            <h5 class="card-title">Módulo Acesso</h5>
-            <p class="card-text">Módulo do sistema para modificação ou liberação de catracas</p>
-          </div>
-        </div>
-        <div class="card text-white bg-success mb-3 col-sm-6" onclick="location.href='#';"
-        style="max-width: 18rem; cursor: pointer;">
-        <div class="card-header">Configurações</div>
-        <div class="card-body">
-          <h5 class="card-title">Módulo Configurações</h5>
-          <p class="card-text">Módulo do sistema para configurar o sistema</p>
-        </div>
-      </div>
-      <div class="card text-white bg-danger mb-3 col-sm-6"  onclick="location.href='#';"
-      style="max-width: 18rem; cursor: pointer;">
-      <div class="card-header">Administrador</div>
-      <div class="card-body">
-        <h5 class="card-title">Módulo Administrador</h5>
-        <p class="card-text">Módulo com acesso restrito a administradores. Gerenciamento de Logs entre outros</p>
-      </div>
-    </div>
-  </div>
 </div>
 
 </main>
 </div>
 </body>
+<script>
+$( document ).ready(function() {
+    var interval = 1000;
+                function doAjax() {
+          $.ajax({
+        type: "POST",
+        url: "autenticar.php?acao=lerCatraca",
+        success: function(msg){
+            if (msg != 'erro'){   
+            var dados = JSON.parse(msg);
+        $(".container-fluid").html('<div class="cards"><img src="../fotosPerfil/'+dados[0]['imagem']+'.png" alt="John" style="width:100%"><h3>'+dados[0]['nome']+'</h3><p class="titles">'+dados[0]['cargo']+'</p><p>'+dados[0]['sigla']+'</p><p><button class="botao">Informações</button></p></div>');
+        $( ".cards" ).fadeOut( 8000, "linear");
+//        setTimeout(function (){
+//        $( ".cards" ).remove();
+//        }, 10000);
+        }
+            else{
+        $(".container-fluid").html("<div class='alert alert-danger' style='text-align:center;' role='alert'>Cartão Não Cadastrado<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+            }
+      },
+    complete: function () {
+    setTimeout(doAjax, interval);
+            }
+    });
+};
+setTimeout(doAjax, interval);
+});
+</script>
 </html>

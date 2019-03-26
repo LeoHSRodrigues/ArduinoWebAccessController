@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require_once('db.class.php');
 $banco = new db();

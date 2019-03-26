@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     $senha = hash('sha512', $_POST['senha']);
     $resultado = $banco->seleciona1($usuario,$senha);
     $teste = $resultado->rowCount();
-    if ($teste < 1){
+    if ($teste > 1){
       $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>Login ou Senha incorretos!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
     }
     else{
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
      $(document).on('shown.bs.modal', function (e) {
       $.ajax({
         type: "POST",
-        url: "autenticar.php",
+        url: "autenticar.php?acao=lerRFIDSenha",
         success: function(msg){
           if (msg == 'achou'){
            $( ".imagemRFID" ).remove();

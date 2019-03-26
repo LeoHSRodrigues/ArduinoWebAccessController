@@ -10,7 +10,7 @@ class db {
 
 	function seleciona($valor){
 		$conexao = $this->conectar();
-		$sql  = "SELECT id FROM usuario where TAGRFID = '$valor'";
+		$sql  = "SELECT nome,status FROM usuario where TAGRFID = '$valor'";
 		$stmt = $conexao->prepare($sql);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -29,6 +29,15 @@ class db {
 	function seleciona2($senha){
 		$conexao = $this->conectar();
 		$sql  = "SELECT nome, tipoConta FROM usuario where senha4 = '$senha'";
+		$stmt = $conexao->prepare($sql);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		
+		return $stmt;
+	}
+    function seleciona3($rfid){
+		$conexao = $this->conectar();
+		$sql = "select nome,status,sigla,cargo from usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor where u.TAGRFID = \"$rfid\"";
 		$stmt = $conexao->prepare($sql);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
