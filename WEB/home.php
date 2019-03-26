@@ -35,8 +35,7 @@ require_once('sessao.php');
         </div>
         <div class="sidebar-header">
           <div class="user-pic">
-            <img class="img-responsive img-rounded" width="100px" height="100px" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
-            alt="User picture">
+            <img class="img-responsive img-rounded" width="100px" height="100px" <?php echo "src='../fotosPerfil/".$_SESSION['cpf'].".png'";?> alt="User picture">
           </div>
           <div class="user-info">
             <span class="user-name"><strong><?php echo $_SESSION['nome']?></strong>
@@ -60,10 +59,10 @@ require_once('sessao.php');
               <div class="sidebar-submenu">
                 <ul>
                   <li>
-                    <a href="#">Editar Minha Conta</a>
+                    <a href="configuracoes.php?editar=conta">Editar Minha Conta</a>
                   </li>
                   <li>
-                    <a href="#">Editar Usuário</a>
+                    <a href="configuracoes.php?editar=usuario">Editar Usuário</a>
                   </li>
                   <li>
                     <a href="configuracoes.php?editar=home">Editar Tela de Inicio</a>

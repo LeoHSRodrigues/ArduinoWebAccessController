@@ -19,7 +19,7 @@ class db {
 	}
 	function seleciona1($cpf,$senha){
 		$conexao = $this->conectar();
-		$sql  = "SELECT nome, tipoConta FROM usuario where CPF = '$cpf' and senha = '$senha'";
+		$sql  = "SELECT nome, tipoConta,CPF FROM usuario where CPF = '$cpf' and senha = '$senha'";
 		$stmt = $conexao->prepare($sql);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -44,18 +44,28 @@ class db {
 		
 		return $stmt;
 	}
+	function seleciona4($cpf){
+		$conexao = $this->conectar();
+		$sql = "select nome,CPF,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento from usuario where CPF = \"$cpf\"";
+		$stmt = $conexao->prepare($sql);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		
+		return $stmt;
+	}
 
-	function insere($nome,$CPF,$senha){
+    // nome,cpf,senha,senha4
+	function insere($dados){
 		try {
 			$conexao = $this->conectar();
-			$sql = "INSERT INTO usuario (nome, CPF, senha) VALUES (?,?,?)";
-			$conexao->prepare($sql)->execute([$nome, $CPF, $senha]);
+			$sql = "INSERT INTO usuario (nome, CPF, senha,senha4,dataDeNascimento) VALUES (?,?,?,?,?)";
+			$conexao->prepare($sql)->execute([$dados['nome'], $dados['cpf'], $dados['senha'],$dados['senha4'],$dados['dataNasc']]);
 			$_SESSION['msg'] = "<div class='alert alert-success' style='text-align: center;' role='alert'>Usuário Cadastrado!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
 			header("Location:login.php");
 			exit();
 		}
 		catch (Exception $e) {
-			$_SESSION['msg'] = "<div class='alert alert-danger' style='text-align: center;' role='alert'>Erro! CPF já cadastrado<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
+			$_SESSION['msg'] = "<div class='alert alert-danger' style='text-align: center;' role='alert'>".$e."<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
 		}
 
 	}

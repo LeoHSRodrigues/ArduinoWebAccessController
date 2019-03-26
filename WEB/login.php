@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       $dados = $resultado->fetchAll();
       $_SESSION['nome'] = $dados[0]['nome'];
       $_SESSION['permissao'] = $dados[0]['tipoConta'];
+      $_SESSION['cpf'] = $dados[0]['CPF'];
       if($dados[0]['tipoConta'] == 'adm'){
         $_SESSION['tipoConta'] = 'Administrador';
       }
@@ -60,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <p style="line-height: 0.1;" class="font-weight-light">CPF:</p>
         <small>O campo CPF deve possuir 11 caracteres.</small><br/><br/>
         <p style="line-height: 0.1;" class="font-weight-light">Senha:</p>
-        <small>O campo senha deve possuir no mínimo 4 caracteres.</small>
+        <small>O campo senha deve possuir no mínimo 6 caracteres.</small>
       </div>
     </div>
 
@@ -154,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
      $('#senha').bind("keyup focusout", function () {
-      if($("#senha").val().length < 5) {
+      if($("#senha").val().length < 6) {
           $( "#validadorSenha" ).removeClass( "fas fa-check");
           $( "#validadorSenha" ).addClass( "fas fa-times");
           $( "#senha" ).addClass("bg-danger text-white");
