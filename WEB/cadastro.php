@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	$dados['cpf'] = $_POST['cpf'];
 	$dados['senha'] = hash('sha512', $_POST['senha']);
 	$dados['senha4'] = hash('sha512', $_POST['senha4']);
+	$dados['rfid'] = hash('sha512', $_POST['rfid']);
 	$dados['dataNasc']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
 	//var_dump($dados['dataNasc']);exit;
 	$diretorioFotoPerfil = '../fotosPerfil/';
@@ -24,33 +25,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 }
 ?>
-
-
-<html>
 <head>
-	<meta charset="UTF-8"> 
-	<title>Cadastro</title>
-	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../CSS/estilo.css">
-	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap-datepicker3.standalone.min.css">
-	<link rel="stylesheet" type="text/css" href="../Bibliotecas/Font-Awesome/css/all.min.css">
-	<script src="../Javascript/jquery-3.3.1.js"></script>
-	<script src="../Javascript/popper.min.js"></script>
-	<script src="../Javascript/bootstrap.min.js"></script>
-	<script src="../Bibliotecas/Font-Awesome/js/all.min.js"></script>
-	<script src="../Javascript/jquery.mask.js"></script>
-	<script src="../Javascript/bootstrap-datepicker.min.js"></script>
-	<script src="../Javascript/bootstrap-datepicker.pt-BR.min.js"></script>
-	<link rel="shortcut icon" href="../Imagens/favicon-lock.ico" />
+  <meta charset="UTF-8" http-equiv="Content-Language" content="pt-br">
+  <title>Login</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <link rel="stylesheet" type="text/css" href="../CSS/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../CSS/estilo.css">
+  <link rel="stylesheet" type="text/css" href="../Bibliotecas/Font-Awesome/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="../Bibliotecas/Argon/css/argon.min.css" >
+  <link rel="stylesheet" href="../Bibliotecas/Argon/vendor/nucleo/css/nucleo.css">
+  <script src="../Javascript/jquery-3.3.1.js"></script>
+  <script src="../Javascript/popper.min.js"></script>
+  <script src="../Javascript/bootstrap.min.js"></script>
+  <script src="../Bibliotecas/Font-Awesome/js/all.min.js"></script>
+  <script src="../Javascript/jquery.mask.js"></script>
+  <script src="../Javascript/bootstrap-datepicker.min.js"></script>
+  <script src="../Javascript/bootstrap-datepicker.pt-BR.min.js"></script>
+  <link rel="shortcut icon" href="../Imagens/favicon-lock.ico" />
+    <style>
+    
+    .custom-file-input ~ .custom-file-label::after {
+    content: "Procurar";
+}   
+    </style>
 </head>
-<body>
-	<div class="main_container">
-
-		<div class="loginbox mx-auto page-wrapper">
-			<div class="card mx-auto bordaRounded">
-				<div class="card-body mx-auto">
-					<h5 class="card-title center_text">Cadastrar</h5>
-				</div>
 				<div class="msg_erro">
 					<?php
 					if(isset($_SESSION['msg'])){
@@ -60,96 +58,142 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 						unset($_SESSION['msg']);
 					}?>
 				</div>
-				<form class="" enctype="multipart/form-data" method="post" id="meuForm" autocomplete="off">
+<div class="col-lg-5" style="margin:auto;">
+  <div class="card bg-secondary shadow border-0">
+    <div class="card-body px-lg-5 py-lg-5">
+      
+      <div class="text-center text-muted mb-4">
+        <p>CADASTRO</p>
+      </div>
+      
+        <hr>
+        
+      <form role="form" method="post" id="meuForm" enctype="multipart/form-data" autocomplete="off">
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Nome" id="nome" name="nome" type="text">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-address-card"></i></span>
+            </div>
+            <input class="form-control" required placeholder="CPF" id="CPF" name="cpf" type="text">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Senha" id="senha" name="senha" type="password">
+          </div>
+        </div>  
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Confirme sua Senha" id="conf_senha" name="conf_senha" type="password">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Data de Nascimento" id="dataNasc" name="dataNasc" type="text">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-key"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Senha de 4 dígitos" id="senha4" name="senha4" type="password">
+          </div>
+        </div>                  
+        
+        
+        <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-key"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Confirme sua senha de 4 dígitos" id="conf_senha4" name="conf_senha4" type="password">
+          </div>
+        </div>
+          
+                  <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-satellite-dish"></i></span>
+            </div>
+            <input class="form-control" value=""required data-toggle="modal" data-target="#modal-form" placeholder="Cadastrar Cartão RFID" id="rfid" name="rfid" type="text">
+          </div>
+        </div>
+        
+        <div class="form-group arquivo">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-file"></i></span>
+            </div>
+            <div class="custom-file text-muted">
+              <input type="file" class="form-control custom-file-input" name="fotoPerfil" id="fotoPerfil" >
+              <label class="custom-file-label form-control " for="validatedCustomFile">Selecione um arquivo</label>
+            </div>
+          </div>
+        </div>
+          
+        <div class="text-center">
+          <button type="submit" id="cadastrar" disabled class="btn btn-primary mt-4">Cadastrar</button>
+          <button type="button" id="voltar" onclick="window.location.href='login.php'" class="btn btn-secondary mt-4">Voltar</button>
+          </div>        
+          
+      </form>
+    </div>
+  </div>
+</div>
 
+  <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-body p-0">
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-body px-lg-5 py-lg-5">
+              <div class="content">
+                <div id="erro"></div>
+                <div class="imagemRFID">
+                  <div class="text-center text-muted mb-4">
+                    <p>Aproxime o cartão da leitora</p>
+                  </div>  
+                  <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px"></div>
+                  <div id="loading"></div>
+                </div>
+                <div class="text-center text-muted mb-4">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-					<div class="form-group input-group col-sm-12 mx-auto">
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="nome">Nome</label>
-							<div class="input-group"></div>
-							<input type="text" required id="nome" name="nome" class="form-control" required placeholder="Digite o seu Nome" aria-label="Digite o seu nome" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i id="validadorNome" class="fas fa-times"></i></span>
-							</div>
-						</div>
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="CPF">CPF</label>
-							<div class="input-group"></div>
-							<input type="text" id="CPF" maxlength="11" name="cpf" class="form-control" required placeholder="Digite o seu CPF" aria-label="Digite o seu email" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i id="validadorCPF" class="fas fa-times"></i></span>
-							</div>
-						</div>
-
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="senha">Senha</label>
-							<div class="input-group"></div>
-							<input type="password" id="senha" name="senha" class="form-control" placeholder="Digite a sua senha" required aria-label="Digite o seu email" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i id="validadorSenha" class="fas fa-times"></i></span>
-							</div>
-						</div>
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="senha">Confirme a sua Senha</label>
-							<div class="input-group"></div>
-							<input type="password" id="conf_senha" name="senha" class="form-control" placeholder="Digite a sua senha" required aria-label="Digite o seu email" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i id="validadorConfirmaSenha" class="fas fa-times"></i></span>
-							</div>
-						</div>	
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="senha">Data de Nascimento</label>
-							<div class="input-group"></div>
-							<input type="text" id="dataNasc" name="dataNasc" class="form-control" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i class="far fa-calendar-alt"></i></span>
-							</div>
-						</div>						
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="senha">Senha de 4 dígitos</label>
-							<div class="input-group"></div>
-							<input type="password" maxlength="4" id="senha4" name="senha4" class="form-control" placeholder="Digite a sua senha" required aria-label="Digite o seu email" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i id="validadorSenha4" class="fas fa-times"></i></span>
-							</div>
-						</div>
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="senha">Confirme a sua Senha</label>
-							<div class="input-group"></div>
-							<input type="password" maxlength="4" id="conf_senha4" name="senha4" class="form-control" placeholder="Digite a sua senha" required aria-label="Digite o seu email" required aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<span class="input-group-text" id="basic-addon2"><i id="validadorConfirmaSenha4" class="fas fa-times"></i></span>
-							</div>
-						</div>
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<label for="senha">Escolha uma Imagem de Perfil</label>
-							<div class="form-group">
-								<input type="file" required name="fotoPerfil" class="form-control-file" id="exampleFormControlFile1">
-							</div>
-						</div>
-
-						<div class="form-group input-group col-sm-8 mx-auto">
-							<input type="submit" disabled style="margin: auto" id="cadastrar" class="btn btn-primary" value="Cadastrar">
-							<input type="button" onclick="window.location.href='login.php'" style="margin: auto" id="voltar" class="btn btn-secondary" value="Voltar">
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</body>
-</html>
 <script type="text/javascript">
 	$(document).ready(function() {
+    
 		$('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
+    
 		$('#dataNasc').datepicker({
 			maxViewMode: 2,
 			todayBtn: "linked",
@@ -157,74 +201,92 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			autoclose: true,
 			todayHighlight: true
 		});
+    
+$('#fotoPerfil').on('change',function(){
+                var fileName = document.getElementById("fotoPerfil").files[0].name;
+                $(this).next('.custom-file-label').html(fileName);
+            })
+    
+    $('#dataNasc').focusout(function(){
+      $( "#dataNasc" ).addClass("is-valid");
+    });
 
+    $('#senha, #conf_senha').on('keyup focusout', function () {
+     if ($('#senha').val() == $('#conf_senha').val() && $('#senha').val().length > 6 ) {
+      $( "#senha" ).removeClass("is-invalid");
+      $( "#conf_senha" ).removeClass("is-invalid");
+      $( "#senha" ).addClass("is-valid");
+      $( "#conf_senha" ).addClass("is-valid");
+      $('#cadastrar').prop("disabled", false);
+    } else {
+      $( "#senha" ).removeClass("is-valid");
+      $( "#conf_senha" ).removeClass("is-valid");
+      $( "#senha" ).addClass("is-invalid");
+      $( "#conf_senha" ).addClass("is-invalid");
 
-		$('#senha, #conf_senha').on('keyup focusout', function () {
-			if ($('#senha').val() == $('#conf_senha').val() && $('#senha').val().length > 6 ) {
-				$( "#senha" ).removeClass("bg-danger text-white");
-				$( "#conf_senha" ).removeClass("bg-danger text-white");
-				$( "#validadorSenha" ).removeClass( "fas fa-times");
-				$( "#validadorConfirmaSenha" ).removeClass( "fas fa-times");
-				$( "#validadorSenha" ).addClass( "fas fa-check");
-				$( "#validadorConfirmaSenha" ).addClass( "fas fa-check");
-				$('#cadastrar').prop("disabled", false);
-			} else {
-				$( "#validadorSenha" ).removeClass( "fas fa-check");
-				$( "#validadorSenha" ).addClass( "fas fa-times");
-				$( "#validadorConfirmaSenha" ).addClass( "fas fa-times");
-				$( "#senha" ).addClass("bg-danger text-white");
-				$( "#conf_senha" ).addClass("bg-danger text-white");
+    }
+  });
 
-			}
-		});
+    $('#senha4, #conf_senha4').on('keyup focusout', function () {
+     if ($('#senha4').val() == $('#conf_senha4').val() && $('#senha4').val().length > 3 ) {
+      $( "#senha4" ).removeClass("is-invalid");
+      $( "#conf_senha4" ).removeClass("is-invalid");
+      $( "#senha4" ).addClass("is-valid");
+      $( "#conf_senha4" ).addClass("is-valid");
+      $('#cadastrar').prop("disabled", false);
+    } else {
+      $( "#senha4" ).removeClass("is-valid");
+      $( "#conf_senha4" ).removeClass("is-valid");
+      $( "#senha4" ).addClass("is-invalid");
+      $( "#conf_senha4" ).addClass("is-invalid");
+      $('#cadastrar').prop("disabled", true);
 
-		$('#senha4, #conf_senha4').on('keyup focusout', function () {
-			if ($('#senha4').val() == $('#conf_senha4').val() && $('#senha4').val().length > 3 ) {
-				$( "#senha4" ).removeClass("bg-danger text-white");
-				$( "#conf_senha4" ).removeClass("bg-danger text-white");
-				$( "#validadorSenha4" ).removeClass( "fas fa-times");
-				$( "#validadorConfirmaSenha4" ).removeClass( "fas fa-times");
-				$( "#validadorSenha4" ).addClass( "fas fa-check");
-				$( "#validadorConfirmaSenha4" ).addClass( "fas fa-check");
-				$('#cadastrar').prop("disabled", false);
-			} else {
-				$( "#validadorSenha4" ).removeClass( "fas fa-check");
-				$( "#validadorSenha4" ).addClass( "fas fa-times");
-				$( "#validadorConfirmaSenha4" ).addClass( "fas fa-times");
-				$( "#senha4" ).addClass("bg-danger text-white");
-				$( "#conf_senha4" ).addClass("bg-danger text-white");
+    }
+  });
+    $('#CPF').focusout(function(){
+     var testarCPF = TestaCPF($("#CPF").val());
+     if(testarCPF == false) {
+      $( "#CPF" ).removeClass("is-valid");
+      $( "#CPF" ).addClass("is-invalid");
+    }
+    else{
+      $( "#CPF" ).removeClass("is-invalid");
+      $( "#CPF" ).addClass("is-valid");
+    }
+  });
 
-			}
-		});
-		$('#CPF').focusout(function(){
-			var testarCPF = TestaCPF($("#CPF").val());
-			if(testarCPF == false) {
-				$( "#validadorCPF" ).removeClass( "fas fa-check");
-				$( "#validadorCPF" ).addClass( "fas fa-times");
-				$( "#CPF" ).addClass("bg-danger text-white");
-			}
-			else{
-				$( "#CPF" ).removeClass("bg-danger text-white");
-				$( "#validadorCPF" ).removeClass( "fas fa-times");
-				$( "#validadorCPF" ).addClass( "fas fa-check");
-			}
-		});
-
-		$('#nome').focusout(function(){
-			if($("#nome").val().length < 5) {
-				$( "#validadorNome" ).removeClass( "fas fa-check");
-				$( "#validadorNome" ).addClass( "fas fa-times");
-				$( "#nome" ).addClass("bg-danger text-white");
-			}
-			else{
-				$( "#nome" ).removeClass("bg-danger text-white");
-				$( "#validadorNome" ).removeClass( "fas fa-times");
-				$( "#validadorNome" ).addClass( "fas fa-check");
-				$('#cadastrar').prop("disabled", true);
-			}
-		});
-
-	});
+    $('#nome').focusout(function(){
+     if($("#nome").val().length < 5) {
+      $( "#nome" ).addClass("is-invalid");
+      $( "#nome" ).removeClass("is-valid");
+    }
+    else{
+      $( "#nome" ).removeClass("is-invalid");
+      $( "#nome" ).addClass("is-valid");
+      $('#cadastrar').prop("disabled", true);
+    }
+  });
+        $('#rfid').focus(function(){
+            $('#modal-form').modal({
+            show: true
+            });
+        });
+                    
+        $(document).on('shown.bs.modal', function (e) {
+      $.ajax({
+        type: "POST",
+        url: "autenticar.php?acao=lerRFID",
+        success: function(msg){
+            $('#rfid').val(msg);
+            $('#rfid').attr('readonly', true);
+            $('#modal-form').modal('hide');
+        }
+    });
+    });
+        
+        
+        
+  });
 </script>
 <script>
 	$("form#meuForm").submit(function(e) {

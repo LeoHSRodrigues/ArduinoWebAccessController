@@ -1,35 +1,11 @@
 .loginbox {
-    width: 300px;
-    height: auto;
-    margin-top: 5%;
-}
-/* sm */
-@media (min-width: 768px) {
-    .loginbox {
-    width: 500px;
-    }
-}
-/* md */
-@media (min-width: 992px) {
-    .loginbox {
-    width: 500px;
-    }
-}
-/* lg */
-@media (min-width: 1200px) {
-    .loginbox {
-    width: 600px;
-    }
-    .bordaRounded{
-      border-radius: 50px;
-    }
+    margin: auto;
+    margin-top: 7%;
 }
 body{
-background: #e4f5fc; /* Old browsers */
-background: -moz-linear-gradient(left, #e4f5fc 0%, #9fd8ef 24%, #2ab0ed 88%); /* FF3.6-15 */
-background: -webkit-linear-gradient(left, #e4f5fc 0%,#9fd8ef 24%,#2ab0ed 88%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to right, #e4f5fc 0%,#9fd8ef 24%,#2ab0ed 88%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f5fc', endColorstr='#2ab0ed',GradientType=1 ); /* IE6-9 */
+background: #0f0c29;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to top, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 

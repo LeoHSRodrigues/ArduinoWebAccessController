@@ -2,15 +2,16 @@
 session_start();
 require_once('db.class.php');
 $banco = new db();
-    $resultado = $banco->seleciona2(hash('sha512', $_POST['senhaRFID']));
+    $resultado = $banco->seleciona2(hash('sha512', $_POST['senhaRFID']),$_POST['RFID']);
     $teste = $resultado->rowCount();
-    if ($teste < 1){
+    if ($teste != 1){
         echo 'n cadastrado';
     }
     else{
         $_SESSION['atividade'] = time();
         $dados = $resultado->fetchAll();
         $_SESSION['nome'] = $dados[0]['nome'];
+        $_SESSION['cpf'] = $dados[0]['CPF'];
         $_SESSION['permissao'] = $dados[0]['tipoConta'];
         if($dados[0]['tipoConta'] == 'adm'){
         $_SESSION['tipoConta'] = 'Administrador';
