@@ -41,23 +41,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <script src="../Javascript/jquery.mask.js"></script>
   <script src="../Javascript/bootstrap-datepicker.min.js"></script>
   <script src="../Javascript/bootstrap-datepicker.pt-BR.min.js"></script>
+  <script src="../Bibliotecas/Argon/js/argon.min.js"></script>
   <link rel="shortcut icon" href="../Imagens/favicon-lock.ico" />
-    <style>
+  <style>
     
     .custom-file-input ~ .custom-file-label::after {
-    content: "Procurar";
-}   
-    </style>
+      content: "Procurar";
+    }   
+  </style>
 </head>
-				<div class="msg_erro">
-					<?php
-					if(isset($_SESSION['msg'])){
-						echo $_SESSION['msg'];
-						unset($_SESSION['msg']);
-					} else {
-						unset($_SESSION['msg']);
-					}?>
-				</div>
+<div class="msg_erro">
+ <?php
+ if(isset($_SESSION['msg'])){
+  echo $_SESSION['msg'];
+  unset($_SESSION['msg']);
+} else {
+  unset($_SESSION['msg']);
+}?>
+</div>
 <div class="col-lg-5" style="margin:auto;">
   <div class="card bg-secondary shadow border-0">
     <div class="card-body px-lg-5 py-lg-5">
@@ -66,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <p>CADASTRO</p>
       </div>
       
-        <hr>
-        
+      <hr>
+      
       <form role="form" method="post" id="meuForm" enctype="multipart/form-data" autocomplete="off">
         
         <div class="form-group">
@@ -133,8 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             <input class="form-control" required placeholder="Confirme sua senha de 4 dígitos" id="conf_senha4" name="conf_senha4" type="password">
           </div>
         </div>
-          
-                  <div class="form-group">
+        
+        <div class="form-group">
           <div class="input-group input-group-alternative">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fas fa-satellite-dish"></i></span>
@@ -154,58 +155,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             </div>
           </div>
         </div>
-          
+        
         <div class="text-center">
           <button type="submit" id="cadastrar" disabled class="btn btn-primary mt-4">Cadastrar</button>
           <button type="button" id="voltar" onclick="window.location.href='login.php'" class="btn btn-secondary mt-4">Voltar</button>
-          </div>        
-          
+        </div>        
+        
       </form>
     </div>
   </div>
 </div>
 
-  <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-body p-0">
-          <div class="card bg-secondary shadow border-0">
-            <div class="card-body px-lg-5 py-lg-5">
-              <div class="content">
-                <div id="erro"></div>
-                <div class="imagemRFID">
-                  <div class="text-center text-muted mb-4">
-                    <p>Aproxime o cartão da leitora</p>
-                  </div>  
-                  <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px"></div>
-                  <div id="loading"></div>
-                </div>
+<div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+  <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card bg-secondary shadow border-0">
+          <div class="card-body px-lg-5 py-lg-5">
+            <div class="content">
+              <div id="erro"></div>
+              <div class="imagemRFID">
                 <div class="text-center text-muted mb-4">
-                </div>
+                  <p>Aproxime o cartão da leitora</p>
+                </div>  
+                <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px"></div>
+                <div id="loading"></div>
+              </div>
+              <div class="text-center text-muted mb-4">
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-<script type="text/javascript">
-	$(document).ready(function() {
+  <script type="text/javascript">
+   $(document).ready(function() {
     
-		$('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
+    $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
     
-		$('#dataNasc').datepicker({
-			maxViewMode: 2,
-			todayBtn: "linked",
-			language: "pt-BR",
-			autoclose: true,
-			todayHighlight: true
-		});
+    $('#dataNasc').datepicker({
+     maxViewMode: 2,
+     todayBtn: "linked",
+     language: "pt-BR",
+     autoclose: true,
+     todayHighlight: true
+   });
     
-$('#fotoPerfil').on('change',function(){
-                var fileName = document.getElementById("fotoPerfil").files[0].name;
-                $(this).next('.custom-file-label').html(fileName);
-            })
+    $('#fotoPerfil').on('change',function(){
+      var fileName = document.getElementById("fotoPerfil").files[0].name;
+      $(this).next('.custom-file-label').html(fileName);
+    })
     
     $('#dataNasc').focusout(function(){
       $( "#dataNasc" ).addClass("is-valid");
@@ -266,26 +267,26 @@ $('#fotoPerfil').on('change',function(){
       $('#cadastrar').prop("disabled", true);
     }
   });
-        $('#rfid').focus(function(){
-            $('#modal-form').modal({
-            show: true
-            });
-        });
-                    
-        $(document).on('shown.bs.modal', function (e) {
+    $('#rfid').focus(function(){
+      $('#modal-form').modal({
+        show: true
+      });
+    });
+    
+    $(document).on('shown.bs.modal', function (e) {
       $.ajax({
         type: "POST",
         url: "autenticar.php?acao=lerRFID",
         success: function(msg){
-            $('#rfid').val(msg);
-            $('#rfid').attr('readonly', true);
-            $('#modal-form').modal('hide');
+          $('#rfid').val(msg);
+          $('#rfid').attr('readonly', true);
+          $('#modal-form').modal('hide');
         }
+      });
     });
-    });
-        
-        
-        
+    
+    
+    
   });
 </script>
 <script>
