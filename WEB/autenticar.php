@@ -22,7 +22,7 @@ else if (isset($_GET['acao']) && $_GET['acao'] == 'lerCatraca'){
     $teste = $resultado->rowCount();
     if ($teste === 1){
         $dados = $resultado->fetchAll();
-        $dados[0]['imagem'] = $output;
+        $dados[0]['cpf'] = $output;
         echo json_encode($dados);
         $output = shell_exec('PowerShell -ExecutionPolicy Bypass -Command "'. __DIR__ .'\fecharPortaRFID.ps1"');
     }

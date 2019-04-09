@@ -37,7 +37,7 @@ class db {
 	}
     function seleciona3($rfid){
 		$conexao = $this->conectar();
-		$sql = "select nome,status,sigla,cargo from usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor where u.TAGRFID = \"$rfid\"";
+		$sql = "select nome,status,sigla,cargo,U.CPF from usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor where u.TAGRFID = \"$rfid\"";
 		$stmt = $conexao->prepare($sql);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -46,7 +46,7 @@ class db {
 	}
 	function seleciona4($cpf){
 		$conexao = $this->conectar();
-		$sql = "select nome,CPF,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento from usuario where CPF = \"$cpf\"";
+		$sql = "select id,nome,CPF,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento from usuario where CPF = \"$cpf\"";
 		$stmt = $conexao->prepare($sql);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -75,7 +75,46 @@ class db {
 
 	}
 
-	function altera(){
+	function altera($dados){
+
+// $dados[0] = nome;
+// $dados[1] = cpf;
+// $dados[2] = senha;
+// $dados[3] = senha4;
+// $dados[4] = rfid;
+// $dados[5] = dataNasc;
+// $dados[6] = id;
+// var_dump($dados);exit;
+		try {   
+  $conexao = $this->conectar();
+  if ($_SESSION['permissao'] === 'adm'){
+  $stmt = $conexao->prepare('UPDATE usuario SET nome = :nome , CPF = :CPF , dataDeNascimento = :dataDeNascimento , tagRFID = :tagRFID , senha = :senha , senha4 = :senha4 WHERE id = :id');
+  $stmt->execute(array(
+    ':id'   => $dados['id'],
+    ':CPF' => $dados['cpf'],
+    ':nome' => $dados['nome'],
+    ':dataDeNascimento' => $dados['dataNasc'],
+    ':tagRFID' => $dados['rfid'],
+    'senha' => $dados['senha'],
+    'senha4' => $dados['senha4']
+  ));
+}
+else{
+  $stmt = $conexao->prepare('UPDATE usuario SET nome = :nome , dataDeNascimento = :dataDeNascimento , tagRFID = :tagRFID , senha = :senha , senha4 = :senha4 WHERE id = :id');
+  $stmt->execute(array(
+    ':id'   => $dados['id'],
+    ':nome' => $dados['nome'],
+    ':dataDeNascimento' => $dados['dataNasc'],
+    ':tagRFID' => $dados['rfid'],
+    'senha' => $dados['senha'],
+    'senha4' => $dados['senha4']
+  ));
+}
+     
+  echo $stmt->rowCount(); 
+} catch(PDOException $e) {
+  echo 'Error: ' . $e->getMessage();
+}
 
 	}
 

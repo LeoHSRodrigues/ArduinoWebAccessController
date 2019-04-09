@@ -2,11 +2,12 @@
 require_once('sessao.php');
 require_once('db.class.php');
 $banco = new db();
+//var_dump($_SESSION['tipoConta']);
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$dados = array();
 	$dados['nome'] = $_POST['nome'];
-	$dados['cpf'] = $_POST['cpf'];
+	$dados['cpf'] = $_SESSION['cpf'];
   if (isset($_POST['senha'])){
    $dados['senha'] = hash('sha512', $_POST['senha']);
  }    
@@ -17,14 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
    $dados['rfid'] = hash('sha512', $_POST['rfid']);
  }
  $dados['dataNasc']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
-	//var_dump($dados['dataNasc']);exit;
+ $dados['id']  = $_POST['id'];
  $diretorioFotoPerfil = '../fotosPerfil/';
  $foto = $_FILES['fotoPerfil']['tmp_name'];
  if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
   $uploadfile = $diretorioFotoPerfil . $dados['cpf'] .'.png';
   move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
   $nomeArquivo = $_FILES['fotoPerfil']['name'];
-  $resultado = $banco->insere($dados);
+  $resultado = $banco->altera($dados);
 }
 else{
   $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
@@ -56,6 +57,7 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
   $dados = $resultado->fetchAll();
   $nome = $dados[0]['nome'];
   $CPF = $dados[0]['CPF'];
+  $id = $dados[0]['id'];
   $dataDeNascimento = $dados[0]['dataDeNascimento'];
 
   $configuracoes = '
@@ -172,9 +174,9 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
  </div>
  
  <div class="text-center">
- <button type="submit" id="cadastrar" class="btn btn-primary mt-4">Cadastrar</button>
+ <button type="submit" id="cadastrar" class="btn btn-primary mt-4">Atualizar</button>
  </div>        
- 
+ <input class="form-control" value="'.$id.'"  placeholder="Nome" id="id" name="id" type="hidden">
  </form>
  </div>
  </div>
@@ -363,6 +365,18 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
 
       }
     });
+      
+    $('#CPF').focusout(function(){
+     var testarCPF = TestaCPF($("#CPF").val());
+     if(testarCPF == false) {
+      $( "#CPF" ).removeClass("is-valid");
+      $( "#CPF" ).addClass("is-invalid");
+    }
+    else{
+      $( "#CPF" ).removeClass("is-invalid");
+      $( "#CPF" ).addClass("is-valid");
+    }
+  });
 
       $('#nome').focusout(function(){
        if($("#nome").val().length < 5) {

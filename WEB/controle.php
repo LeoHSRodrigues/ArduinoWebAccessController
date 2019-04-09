@@ -42,10 +42,12 @@ require_once('sessao.php');
     max-width: 300px;
     margin: auto;
     text-align: center;
+    z-index: 9999;
+    background: white;
   }
 
   .titles {
-    color: grey;
+    color: white;
     font-size: 18px;
   }
 
@@ -93,7 +95,7 @@ require_once('sessao.php');
         success: function(msg){
           if (msg != 'erro'){   
             var dados = JSON.parse(msg);
-            $(".container-fluid").html('<div class="cards"><img src="../fotosPerfil/'+dados[0]['imagem']+'.png" alt="John" style="width:100%"><h3>'+dados[0]['nome']+'</h3><p class="titles">'+dados[0]['cargo']+'</p><p>'+dados[0]['sigla']+'</p><p><button class="botao">Informações</button></p></div>');
+            $(".container-fluid").html('<div class="cards"><img src="../fotosPerfil/'+dados[0]['CPF']+'.png" alt="John" style="width:100%"><h3>'+dados[0]['nome']+'</h3><p class="titles">'+dados[0]['cargo']+'</p><p>'+dados[0]['sigla']+'</p><p><button class="botao">Informações</button></p></div>');
             $( ".cards" ).fadeOut( 8000, "linear");
 //        setTimeout(function (){
 //        $( ".cards" ).remove();

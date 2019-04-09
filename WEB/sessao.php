@@ -5,6 +5,7 @@ if (isset($_SESSION['atividade']) && (time() - $_SESSION['atividade'] < 21600)) 
 	
 }
 else{
+	session_destroy();
 	echo '<script>window.location.href = "logout.php";</script>';
 }
 ?>

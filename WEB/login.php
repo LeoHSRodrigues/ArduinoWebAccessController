@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>Login ou Senha incorretos!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
     }
     else{
-    //var_dump($teste);exit;
       $_SESSION['atividade'] = time();
       $dados = $resultado->fetchAll();
       $_SESSION['nome'] = $dados[0]['nome'];
@@ -162,26 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
           </div>
         </div>
       </div>
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    </div> 
   </body>
   <script type="text/javascript">
     $(document).ready(function() {
