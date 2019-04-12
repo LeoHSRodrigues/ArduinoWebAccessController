@@ -3,34 +3,6 @@ require_once('sessao.php');
 require_once('db.class.php');
 $banco = new db();
 //var_dump($_SESSION['tipoConta']);
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-	$dados = array();
-	$dados['nome'] = $_POST['nome'];
-	$dados['cpf'] = $_SESSION['cpf'];
-  if (isset($_POST['senha'])){
-   $dados['senha'] = hash('sha512', $_POST['senha']);
- }    
- if (isset($_POST['senha4'])){
-   $dados['senha4'] = hash('sha512', $_POST['senha4']);
- }    
- if (isset($_POST['rfid'])){
-   $dados['rfid'] = hash('sha512', $_POST['rfid']);
- }
- $dados['dataNasc']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
- $dados['id']  = $_POST['id'];
- $diretorioFotoPerfil = '../fotosPerfil/';
- $foto = $_FILES['fotoPerfil']['tmp_name'];
- if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
-  $uploadfile = $diretorioFotoPerfil . $dados['cpf'] .'.png';
-  move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
-  $nomeArquivo = $_FILES['fotoPerfil']['name'];
-  $resultado = $banco->altera($dados);
-}
-else{
-  $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
-}
-}
 if (isset($_GET['editar']) && $_GET['editar'] == 'home'){
   $configuracoes = '
   <div class="row">
@@ -71,7 +43,7 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
   
   <hr>
   
-  <form role="form" method="post" id="meuForm" enctype="multipart/form-data" autocomplete="off">
+  <form role="form" method="post" id="meuForm" action="configuracoes.php?salvar=conta" enctype="multipart/form-data" autocomplete="off">
   
   <div class="form-group">
   <div class="input-group input-group-alternative mb-3">
@@ -184,16 +156,78 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
  ';
 
 }
+else if (isset($_GET['editar']) && $_GET['editar'] == 'usuario'){
+
+  $configuracoes = '
+  <div class="text-center text-muted mb-4">
+  <p>EDITAR USUÁRIO</p>
+  </div>
+  
+  <hr>
+
+  <table id="example" class="display table table-hover" style="width:100%">
+  <thead>
+  <tr>
+  <th>Nome</th>
+  <th>CPF</th>
+  <th>Tipo de Conta</th>
+  <th>Data de Nascimento</th>
+  <th>Status</th>
+  <th>ID</th>
+  <th>Editar</th>
+  <th>Apagar</th>
+  </tr>
+  </thead>
+  </table>';
+
+}
+else if (isset($_GET['salvar']) && $_GET['salvar'] == 'usuario'){
+
+  $resultado = $banco->apaga($_POST['id']);
+  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+  header("Location:configuracoes.php?editar=usuario");
+}
+else if (isset($_GET['salvar']) && $_GET['salvar'] == 'conta')
+{
+  $dados = array();
+  $dados['nome'] = $_POST['nome'];
+  $dados['cpf'] = $_SESSION['cpf'];
+  if (isset($_POST['senha'])){
+   $dados['senha'] = hash('sha512', $_POST['senha']);
+ }    
+ if (isset($_POST['senha4'])){
+   $dados['senha4'] = hash('sha512', $_POST['senha4']);
+ }    
+ if (isset($_POST['rfid'])){
+   $dados['rfid'] = hash('sha512', $_POST['rfid']);
+ }
+ $dados['dataNasc']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
+ $dados['id']  = $_POST['id'];
+ $diretorioFotoPerfil = '../fotosPerfil/';
+ $foto = $_FILES['fotoPerfil']['tmp_name'];
+ if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
+  $uploadfile = $diretorioFotoPerfil . $dados['cpf'] .'.png';
+  move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
+  $nomeArquivo = $_FILES['fotoPerfil']['name'];
+  $resultado = $banco->altera($dados);
+}
+else{
+  $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+}
+}
 ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
 <link rel="stylesheet" type="text/css" href="../CSS/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="../CSS/estilo.css">
+<!-- <link rel="stylesheet" type="text/css" href="../Bibliotecas/Argon/css/argon.min.css" > -->
+<link rel="stylesheet" type="text/css" href="../CSS/dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="../Bibliotecas/Font-Awesome/css/all.min.css">
-<link rel="stylesheet" type="text/css" href="../Bibliotecas/Argon/css/argon.min.css" >
 <link href="../CSS/home.css" rel="stylesheet">
 <link rel="stylesheet" href="../Bibliotecas/Argon/vendor/nucleo/css/nucleo.css">
 <link href="../CSS/multi-select.css" media="screen" rel="stylesheet" type="text/css">
 <script src="../Javascript/jquery-3.3.1.js"></script>
+<script src="../Javascript/jquery.dataTables.min.js"></script>
+<script src="../Javascript/dataTables.bootstrap4.min.js"></script>
 <script src="../Javascript/popper.min.js"></script>
 <script src="../Javascript/bootstrap.min.js"></script>
 <script src="../Bibliotecas/Font-Awesome/js/all.min.js"></script>
@@ -216,9 +250,8 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
   <title>Configurações</title>
   <style>
     body{
-      background: #485563;  /* fallback for old browsers */
-      background: -webkit-linear-gradient(to right, #29323c, #485563);  /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: white;  /* fallback for old browsers */
+
     }
     .custom-file-input ~ .custom-file-label::after {
       content: "Procurar";
@@ -228,53 +261,249 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
 
 <body>
   <div class="page-wrapper chiller-theme toggled">
-    <div class="msg_erro">
-     <?php
-     if(isset($_SESSION['msg'])){
-      echo $_SESSION['msg'];
-      unset($_SESSION['msg']);
-    } else {
-      unset($_SESSION['msg']);
-    }?>
+    <?php include('admin/navbar.php'); ?>
+    <main class="page-content">
+      <div class="container-fluid">
+        <div class="msg_erro">
+          <?php
+          if(isset($_SESSION['msg'])){
+            echo $_SESSION['msg'];
+            unset($_SESSION['msg']);
+          } else {
+            unset($_SESSION['msg']);
+          }?>
+        </div>
+        <?php
+        echo $configuracoes;
+        ?>
+      </div>
+    </main>
   </div>
-  <?php include('admin/navbar.php'); ?>
-  <main class="page-content">
-    <div class="container-fluid">
-      <?php
-      echo $configuracoes;
-      ?>
-    </div>
-  </main>
-</div>
 
-<div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-  <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-body p-0">
-        <div class="card bg-secondary shadow border-0">
-          <div class="card-body px-lg-5 py-lg-5">
-            <div class="content">
-              <div id="erro"></div>
-              <div class="imagemRFID">
+  <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-body p-0">
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-body px-lg-5 py-lg-5">
+              <div class="content">
+                <div id="erro"></div>
+                <div class="imagemRFID">
+                  <div class="text-center text-muted mb-4">
+                    <p>Aproxime o cartão da leitora</p>
+                  </div>  
+                  <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px"></div>
+                  <div id="loading"></div>
+                </div>
                 <div class="text-center text-muted mb-4">
-                  <p>Aproxime o cartão da leitora</p>
-                </div>  
-                <img class="pulse"src="../Imagens/approachRFID.png" width="300px" height="300px"></div>
-                <div id="loading"></div>
-              </div>
-              <div class="text-center text-muted mb-4">
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="modal" id="modal-excluir" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Apagar Usuário</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Você realmente deseja apagar esse registro?</p>
+          </div>
+          <form method="POST" action="configuracoes.php?salvar=usuario" autocomplete="off">
+            <input type="hidden" name="id" id="id">
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger">Apagar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-editar" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div>
+            <h5 class="modal-title">ATUALIZAR CONTA</h5>
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form role="form" method="post" id="meuForm" action="configuracoes.php?salvar=conta" enctype="multipart/form-data" autocomplete="off">
+
+              <div class="form-group">
+                <div class="input-group input-group-alternative mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                  </div>
+                  <input class="form-control" value=""  placeholder="Nome" id="nome" name="nome" type="text">
+                </div>
+              </div>
+              <div class="form-group">
+               <div class="input-group input-group-alternative mb-3">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="far fa-address-card"></i></span>
+                 </div>
+                 <input class="form-control" value=""  placeholder="CPF" id="CPF" name="cpf" type="text">  
+               </div>
+             </div>
+             <div class="form-group">
+               <div class="input-group input-group-alternative mb-3">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="far fa-address-card"></i></span>
+                 </div>
+                 <input class="form-control" value="" data-toggle="tooltip" disabled placeholder="CPF" id="CPF" name="cpf" type="text">  
+                 <span class="input-group-text"><i class="fas fa-question" data-placement="top" title="Para alterar o CPF contate um administrador">Para alterar o CPF contate um administrador</i></span>
+               </div>
+             </div>
+             <div class="form-group">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                 </div>
+                 <input class="form-control"  placeholder="Senha" id="senha" name="senha" type="password">
+               </div>
+             </div>  
+
+             <div class="form-group">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                 </div>
+                 <input class="form-control"  placeholder="Confirme sua Senha" id="conf_senha" name="conf_senha" type="password">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                 </div>
+                 <input class="form-control" value=""  placeholder="Data de Nascimento" id="dataNasc" name="dataNasc" type="text">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="fas fa-key"></i></span>
+                 </div>
+                 <input class="form-control"  placeholder="Senha de 4 dígitos" id="senha4" name="senha4" type="password">
+               </div>
+             </div>                  
+
+
+             <div class="form-group">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="fas fa-key"></i></span>
+                 </div>
+                 <input class="form-control"  placeholder="Confirme sua senha de 4 dígitos" id="conf_senha4" name="conf_senha4" type="password">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="fas fa-satellite-dish"></i></span>
+                 </div>
+                 <input class="form-control" value="" data-toggle="modal" data-target="#modal-form" placeholder="Cadastrar Cartão RFID" id="rfid" name="rfid" type="text">
+               </div>
+             </div>
+
+             <div class="form-group arquivo">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="far fa-file"></i></span>
+                 </div>
+                 <div class="custom-file text-muted">
+                   <input type="file" class="form-control custom-file-input" name="fotoPerfil" id="fotoPerfil" >
+                   <label class="custom-file-label form-control " for="validatedCustomFile">Selecione um arquivo</label>
+                 </div>
+               </div>
+             </div>
+
+             <div class="text-center">
+               <button type="submit" id="cadastrar" class="btn btn-primary mt-4">Atualizar</button>
+             </div>        
+             <input class="form-control" value="'.$id.'"  placeholder="Nome" id="id" name="id" type="hidden">
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+   <form method="POST" action="configuracoes.php?salvar=conta" autocomplete="off">
+    <input type="hidden" name="id" id="id">
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-danger">Atualizar</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+
+
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
-    
-    
+
+    $('#example').DataTable( {
+      "processing": true,
+      "language": {
+        "url": "../Javascript/Portuguese-Brasil.json"
+      },
+      "ajax": "usuario.php?buscarUsuario",
+      "columns": [
+      { "data": "nome" },
+      { "data": "CPF" },
+      { "data": "tipoConta" ,orderable: false,},
+      { "data": "dataDeNascimento",orderable: false, },
+      { "data": "status" ,orderable: false},
+      { "data": "id",orderable: false, "visible": false},
+      {
+        data: null,
+        orderable: false,
+        className: "center",
+        defaultContent: '<button class="btn btn-light" id="editar">Editar</button>'
+      },    
+      {
+        data: null,
+        orderable: false,
+        className: "center",
+        defaultContent: '<button class="btn btn-danger" id="apagar">Apagar</button>'
+      }
+      ]
+    } );
+
+    var table = $('#example').DataTable();
+
+    $('#example tbody').on( 'click', '#editar', function () {
+      var data = table.row( $(this).parents('tr') ).data();
+      $('#modal-editar').modal({
+        show: true
+      });
+      $('#id').val(data.id);
+    } );   
+
+    $('#example tbody').on( 'click', '#apagar', function () {
+      var data = table.row( $(this).parents('tr') ).data();
+      $('#modal-excluir').modal({
+        show: true
+      });
+      $('#id').val(data.id);
+    } );
+
     var url_string = window.location.href;
     var url = new URL(url_string);
     var c = url.searchParams.get("editar");
@@ -316,7 +545,6 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
       });
     }
     else if (c === 'conta'){
-      
       $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
       
       $('#dataNasc').datepicker({
@@ -366,17 +594,17 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
       }
     });
       
-    $('#CPF').focusout(function(){
-     var testarCPF = TestaCPF($("#CPF").val());
-     if(testarCPF == false) {
-      $( "#CPF" ).removeClass("is-valid");
-      $( "#CPF" ).addClass("is-invalid");
-    }
-    else{
-      $( "#CPF" ).removeClass("is-invalid");
-      $( "#CPF" ).addClass("is-valid");
-    }
-  });
+      $('#CPF').focusout(function(){
+       var testarCPF = TestaCPF($("#CPF").val());
+       if(testarCPF == false) {
+        $( "#CPF" ).removeClass("is-valid");
+        $( "#CPF" ).addClass("is-invalid");
+      }
+      else{
+        $( "#CPF" ).removeClass("is-invalid");
+        $( "#CPF" ).addClass("is-valid");
+      }
+    });
 
       $('#nome').focusout(function(){
        if($("#nome").val().length < 5) {
@@ -388,13 +616,14 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
         $( "#nome" ).addClass("is-valid");
       }
     });
+
       $('#rfid').focus(function(){
         $('#modal-form').modal({
           show: true
         });
       });
       
-      $(document).on('shown.bs.modal', function (e) {
+      $('#modal-form').on('shown.bs.modal', function (e) {
         $.ajax({
           type: "POST",
           url: "autenticar.php?acao=lerRFID",

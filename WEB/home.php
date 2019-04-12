@@ -45,6 +45,15 @@ require_once('sessao.php');
   <div class="page-wrapper chiller-theme toggled">
     <?php include('admin/navbar.php'); ?>
     <main class="page-content">
+          <div class="msg_erro">
+      <?php
+      if(isset($_SESSION['msg'])){
+        echo $_SESSION['msg'];
+        unset($_SESSION['msg']);
+      } else {
+        unset($_SESSION['msg']);
+      }?>
+    </div>
       <div class="container-fluid">
         <div class="row">
           <div class="card text-black bg-secondary mb-3 col-sm-6 " onclick="location.href='controle.php';"

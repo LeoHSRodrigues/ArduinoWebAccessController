@@ -54,7 +54,7 @@
               <a href="configuracoes.php?editar=conta">Editar Minha Conta</a>
             </li>
             <li>
-              <a href="configuracoes.php?editar=usuario">Editar Usuário</a>
+              <a href="configuracoes.php?editar=usuario">Gerenciar Usuários</a>
             </li>
             <li>
               <a href="configuracoes.php?editar=home">Editar Tela de Inicio</a>

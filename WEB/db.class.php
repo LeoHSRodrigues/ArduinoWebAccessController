@@ -53,6 +53,15 @@ class db {
 		
 		return $stmt;
 	}
+	function seleciona5(){
+		$conexao = $this->conectar();
+		$sql = "select id,nome,CPF,tipoConta,status,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento from usuario";
+		$stmt = $conexao->prepare($sql);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		
+		return $stmt;
+	}
 
     // nome,cpf,senha,senha4
 	function insere($dados){
@@ -70,9 +79,19 @@ class db {
 
 	}
 
-	function apaga(){
-
-
+	function apaga($id){
+		try {
+  $conexao = $this->conectar();
+  $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+   
+  $stmt = $conexao->prepare('DELETE FROM usuario WHERE id = :id');
+  $stmt->bindParam(':id', $id); 
+  $stmt->execute();
+     
+  echo $stmt->rowCount(); 
+} catch(PDOException $e) {
+  echo 'Error: ' . $e->getMessage();
+}
 	}
 
 	function altera($dados){
