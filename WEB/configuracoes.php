@@ -25,7 +25,7 @@ if (isset($_GET['editar']) && $_GET['editar'] == 'home'){
   </div>';
 }
 else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
-  $resultado = $banco->seleciona4($_SESSION['cpf']);
+  $resultado = $banco->seleciona("id,nome,CPF,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento","usuario","CPF", $_SESSION['cpf']);
   $dados = $resultado->fetchAll();
   $nome = $dados[0]['nome'];
   $CPF = $dados[0]['CPF'];
@@ -60,7 +60,7 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
    <div class="input-group-prepend">
    <span class="input-group-text"><i class="far fa-address-card"></i></span>
    </div>
-   <input class="form-control" value="'.$CPF.'"  placeholder="CPF" id="CPF" name="cpf" type="text">  
+   <input class="form-control" value="'.$CPF.'"  placeholder="CPF" id="CPF" name="CPF" type="text">  
    </div>
    </div>'; 
  }
@@ -70,7 +70,7 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
    <div class="input-group-prepend">
    <span class="input-group-text"><i class="far fa-address-card"></i></span>
    </div>
-   <input class="form-control" value="'.$CPF.'" data-toggle="tooltip" disabled placeholder="CPF" id="CPF" name="cpf" type="text">  
+   <input class="form-control" value="'.$CPF.'" data-toggle="tooltip" disabled placeholder="CPF" id="CPF" name="CPF" type="text">  
    <span class="input-group-text"><i class="fas fa-question" data-placement="top" title="Para alterar o CPF contate um administrador">Para alterar o CPF contate um administrador</i></span>
    </div>
    </div>'; 
@@ -101,7 +101,7 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'conta'){
  <div class="input-group-prepend">
  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
  </div>
- <input class="form-control" value="'.$dataDeNascimento.'"  placeholder="Data de Nascimento" id="dataNasc" name="dataNasc" type="text">
+ <input class="form-control" value="'.$dataDeNascimento.'"  placeholder="Data de Nascimento" id="dataDeNascimento" name="dataDeNascimento" type="text">
  </div>
  </div>
  
@@ -181,44 +181,138 @@ else if (isset($_GET['editar']) && $_GET['editar'] == 'usuario'){
   </table>';
 
 }
-else if (isset($_GET['salvar']) && $_GET['salvar'] == 'usuario'){
+else if (isset($_GET['excluir']) && $_GET['excluir'] == 'usuario'){
 
-  $resultado = $banco->apaga($_POST['id']);
+  $resultado = $banco->apaga('usuario','id = :id', $_POST['id']);
+
+  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+  header("Location:setores.php?listar=home");
   $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
   header("Location:configuracoes.php?editar=usuario");
 }
 else if (isset($_GET['salvar']) && $_GET['salvar'] == 'conta')
 {
   $dados = array();
-  $dados['nome'] = $_POST['nome'];
-  $dados['cpf'] = $_SESSION['cpf'];
-  if (isset($_POST['senha'])){
+
+  if ($_SESSION['id'] == $_POST['id']){
+    $_SESSION['nome'] = $_POST['nome'];
+    $_SESSION['permissao'] = $_POST['tipoConta'];
+  }
+
+  if (isset($_POST['nome']) && $_POST['nome'] != ''){
+   $dados['nome'] = $_POST['nome'];
+ }   
+ if (isset($_POST['CPF']) && $_POST['CPF'] != ''){
+   $dados['CPF'] = $_POST['CPF'];
+ }  
+ if (isset($_POST['tipoConta']) && $_POST['tipoConta'] != ''){
+   $dados['tipoConta'] = $_POST['tipoConta'];
+ }    
+ if (isset($_POST['status']) && $_POST['status'] != ''){
+   $dados['status'] = $_POST['status'];
+ }   
+ if (isset($_POST['senha']) && $_POST['senha'] != ''){
    $dados['senha'] = hash('sha512', $_POST['senha']);
  }    
- if (isset($_POST['senha4'])){
+ if (isset($_POST['senha4']) && $_POST['senha4'] != ''){
    $dados['senha4'] = hash('sha512', $_POST['senha4']);
  }    
- if (isset($_POST['rfid'])){
+ if (isset($_POST['rfid']) && $_POST['rfid'] != ''){
    $dados['rfid'] = hash('sha512', $_POST['rfid']);
  }
- $dados['dataNasc']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
- $dados['id']  = $_POST['id'];
+ if (isset($_POST['dataDeNascimento'])){
+   $dados['dataDeNascimento']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataDeNascimento'])));
+ }
+ $id = $_POST['id'];
  $diretorioFotoPerfil = '../fotosPerfil/';
- $foto = $_FILES['fotoPerfil']['tmp_name'];
- if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
-  $uploadfile = $diretorioFotoPerfil . $dados['cpf'] .'.png';
-  move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
-  $nomeArquivo = $_FILES['fotoPerfil']['name'];
-  $resultado = $banco->altera($dados);
+ if ($_FILES['fotoPerfil']['tmp_name']){
+   $foto = $_FILES['fotoPerfil']['tmp_name'];
+   if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
+    $uploadfile = $diretorioFotoPerfil . $dados['CPF'] .'.png';
+    move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
+    $nomeArquivo = $_FILES['fotoPerfil']['name'];
+  }
+  else{
+   $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+ }
+
 }
-else{
-  $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+$campos = array_keys($dados);
+$dados = array_values($dados);
+$teste = array_combine($campos, $dados);
+$valor = count($dados);
+for ($i=0; $i < $valor ; $i++) { 
+  $testequery[] = $campos[$i]. ' = :'. $campos[$i];
 }
+$testequery = implode(" , ", $testequery);
+$query = $testequery. ' where id = '.$id;
+$resultado = $banco->altera('usuario',$query,$dados);
+
+if ($resultado == null){
+ $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Atualizado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+ header("Location:configuracoes.php?editar=usuario");
+}
+
+}
+
+else if (isset($_GET['salvar']) && $_GET['salvar'] == 'novaConta')
+{
+  $dados = array();
+
+  if (isset($_POST['nome']) && $_POST['nome'] != ''){
+   $dados['nome'] = $_POST['nome'];
+ }   
+ if (isset($_POST['CPF']) && $_POST['CPF'] != ''){
+   $dados['CPF'] = $_POST['CPF'];
+ }  
+ if (isset($_POST['senha']) && $_POST['senha'] != ''){
+   $dados['senha'] = hash('sha512', $_POST['senha']);
+ }    
+ if (isset($_POST['senha4']) && $_POST['senha4'] != ''){
+   $dados['senha4'] = hash('sha512', $_POST['senha4']);
+ }    
+ if (isset($_POST['dataDeNascimento'])){
+   $dados['dataDeNascimento']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataDeNascimento'])));
+ }
+ if (isset($_POST['rfid']) && $_POST['rfid'] != ''){
+   $dados['tagRFID'] = hash('sha512', $_POST['rfid']);
+ }
+
+ if ($_FILES['fotoPerfil']['tmp_name']){
+  $diretorioFotoPerfil = '../fotosPerfil/';
+  $foto = $_FILES['fotoPerfil']['tmp_name'];
+  if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
+    $uploadfile = $diretorioFotoPerfil . $dados['CPF'] .'.png';
+    move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
+    $nomeArquivo = $_FILES['fotoPerfil']['name'];
+  }
+  else{
+   $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+ }
+
+}
+  $campos = array_keys($dados);
+  $valor = count($dados);
+  for ($i=0; $i < $valor ; $i++) { 
+    $testequery[] = '?';
+  }
+  $contador = implode(" , ", $testequery);
+  $campos = implode(" , ", $campos);
+
+  $resultado = $banco->insere('usuario',$campos,$contador,$dados);
+//$resultado = $banco->insere($dados);
+
+ $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Cadastrado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+ header("Location:configuracoes.php?editar=usuario");
+
 }
 ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
 <link rel="stylesheet" type="text/css" href="../CSS/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="../CSS/estilo.css">
+<link rel="stylesheet" type="text/css" href="../CSS/bootstrap-datepicker.min.css">
 <!-- <link rel="stylesheet" type="text/css" href="../Bibliotecas/Argon/css/argon.min.css" > -->
 <link rel="stylesheet" type="text/css" href="../CSS/dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="../Bibliotecas/Font-Awesome/css/all.min.css">
@@ -316,7 +410,7 @@ else{
           <div class="modal-body">
             <p>Você realmente deseja apagar esse registro?</p>
           </div>
-          <form method="POST" action="configuracoes.php?salvar=usuario" autocomplete="off">
+          <form method="POST" action="configuracoes.php?excluir=usuario" autocomplete="off">
             <input type="hidden" name="id" id="id">
             <div class="modal-footer">
               <button type="submit" class="btn btn-danger">Apagar</button>
@@ -332,7 +426,7 @@ else{
         <div class="modal-content">
           <div class="modal-header">
             <div>
-            <h5 class="modal-title">ATUALIZAR CONTA</h5>
+              <h5 class="modal-title">ATUALIZAR CONTA</h5>
             </div>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -349,23 +443,16 @@ else{
                   <input class="form-control" value=""  placeholder="Nome" id="nome" name="nome" type="text">
                 </div>
               </div>
+
               <div class="form-group">
                <div class="input-group input-group-alternative mb-3">
                  <div class="input-group-prepend">
                    <span class="input-group-text"><i class="far fa-address-card"></i></span>
                  </div>
-                 <input class="form-control" value=""  placeholder="CPF" id="CPF" name="cpf" type="text">  
+                 <input class="form-control" value=""  data-toggle="tooltip" disabled placeholder="CPF" id="CPF" name="CPF" type="text">  
                </div>
              </div>
-             <div class="form-group">
-               <div class="input-group input-group-alternative mb-3">
-                 <div class="input-group-prepend">
-                   <span class="input-group-text"><i class="far fa-address-card"></i></span>
-                 </div>
-                 <input class="form-control" value="" data-toggle="tooltip" disabled placeholder="CPF" id="CPF" name="cpf" type="text">  
-                 <span class="input-group-text"><i class="fas fa-question" data-placement="top" title="Para alterar o CPF contate um administrador">Para alterar o CPF contate um administrador</i></span>
-               </div>
-             </div>
+
              <div class="form-group">
                <div class="input-group input-group-alternative">
                  <div class="input-group-prepend">
@@ -389,7 +476,7 @@ else{
                  <div class="input-group-prepend">
                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                  </div>
-                 <input class="form-control" value=""  placeholder="Data de Nascimento" id="dataNasc" name="dataNasc" type="text">
+                 <input class="form-control" value=""  placeholder="Data de Nascimento" id="dataDeNascimento" name="dataDeNascimento" type="text">
                </div>
              </div>
 
@@ -410,6 +497,33 @@ else{
                  </div>
                  <input class="form-control"  placeholder="Confirme sua senha de 4 dígitos" id="conf_senha4" name="conf_senha4" type="password">
                </div>
+             </div>             
+
+             <div class="form-group escolhatipoConta">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+                 </div>
+                 <select name="tipoConta" class="form-control">
+                   <option selected>- SELECIONE -</option>
+                   <option value="adm">Administrador</option>
+                   <option value="func">Funcionário</option>
+                   <option value="user">Usuário</option>
+                 </select>
+               </div>
+             </div>             
+
+             <div class="form-group escolhaStatus">
+               <div class="input-group input-group-alternative">
+                 <div class="input-group-prepend">
+                   <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+                 </div>
+                 <select name="status" class="form-control">
+                   <option selected>- SELECIONE -</option>
+                   <option value="Ativo">Ativo</option>
+                   <option value="Bloqueado">Bloqueado</option>
+                 </select>
+               </div>
              </div>
 
              <div class="form-group">
@@ -428,42 +542,34 @@ else{
                  </div>
                  <div class="custom-file text-muted">
                    <input type="file" class="form-control custom-file-input" name="fotoPerfil" id="fotoPerfil" >
-                   <label class="custom-file-label form-control " for="validatedCustomFile">Selecione um arquivo</label>
+                   <label class="custom-file-label form-control " id="legendaFoto" for="validatedCustomFile">Selecione um arquivo</label>
                  </div>
                </div>
              </div>
 
              <div class="text-center">
-               <button type="submit" id="cadastrar" class="btn btn-primary mt-4">Atualizar</button>
+               <button type="submit" id="cadastrarBotao" class="btn btn-primary mt-4">Atualizar</button>
              </div>        
-             <input class="form-control" value="'.$id.'"  placeholder="Nome" id="id" name="id" type="hidden">
+             <input class="form-control" value="" id="idEditar" name="id" type="hidden">
            </form>
          </div>
        </div>
      </div>
    </div>
-   <form method="POST" action="configuracoes.php?salvar=conta" autocomplete="off">
-    <input type="hidden" name="id" id="id">
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-danger">Atualizar</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-    </div>
-  </form>
-</div>
-</div>
-</div>
 
 
-</body>
-<script type="text/javascript">
+ </body>
+ <script type="text/javascript">
   $(document).ready(function() {
+
+    var tipoConta = "<?php echo ($_SESSION['permissao']); ?>";
 
     $('#example').DataTable( {
       "processing": true,
       "language": {
         "url": "../Javascript/Portuguese-Brasil.json"
       },
-      "ajax": "usuario.php?buscarUsuario",
+      "ajax": "api.php?buscarUsuario",
       "columns": [
       { "data": "nome" },
       { "data": "CPF" },
@@ -488,13 +594,77 @@ else{
 
     var table = $('#example').DataTable();
 
+    $('#example').on('init.dt', function () {  
+      $('#example_filter').append('<button class="btn btn-primary" id="cadastrar">Cadastrar</button>');
+    });
+
+    $('.container-fluid').on( 'click', '#cadastrar', function () {
+      $('#modal-editar').modal({
+        show: true
+      });
+      $('.modal-title').html('Cadastrar');
+      $('#cadastrarBotao').html('Cadastrar');
+      $('#CPF').attr('disabled',false);
+      $('.escolhatipoConta').empty();
+      $('.escolhaStatus').empty();
+      $('#idEditar').val('');
+      $('#nome').val('');
+      $('#CPF').val('');
+      $('#dataDeNascimento').val('');
+      $( "#senha" ).val('');
+      $( "#conf_senha" ).val('');
+      $('#rfid').val('');
+      $('#legendaFoto').text('Selecione um arquivo');
+      $('#fotoPerfil').attr('readonly', false);
+      $('#meuForm').attr('action','configuracoes.php?salvar=novaConta');
+    });
+
     $('#example tbody').on( 'click', '#editar', function () {
       var data = table.row( $(this).parents('tr') ).data();
       $('#modal-editar').modal({
         show: true
       });
-      $('#id').val(data.id);
+      $('#idEditar').val(data.id);
+      $('#nome').val(data.nome);
+      $('#CPF').val(data.CPF);
+
+      if (tipoConta != 'adm'){
+        if (data.tipoConta != 'user'){
+          $('#CPF').attr('disabled', true);
+          $('#CPF').append('<span class="input-group-text"><i class="fas fa-question" data-placement="top" title="Para alterar o CPF contate um administrador">Para alterar o CPF contate um administrador</i></span>');
+        }
+        else{
+          $('#CPF').attr('disabled', false);
+        }
+      }
+      else{
+        $('#CPF').attr('disabled', false);
+
+      }
+      $('#cadastrarBotao').html('Atualizar');
+      $('#dataDeNascimento').val(data.dataDeNascimento);
     } );   
+
+    $('#modal-editar').on('hidden.bs.modal', function (e) {
+      $( "#dataDeNascimento" ).removeClass("is-valid");
+      $( "#dataDeNascimento" ).removeClass("is-invalid");
+
+      $( "#senha" ).removeClass("is-invalid");
+      $( "#conf_senha" ).removeClass("is-invalid");
+      $( "#senha" ).removeClass("is-valid");
+      $( "#conf_senha" ).removeClass("is-valid");
+
+      $( "#senha4" ).removeClass("is-invalid");
+      $( "#conf_senha4" ).removeClass("is-invalid");
+      $( "#senha4" ).removeClass("is-valid");
+      $( "#conf_senha4" ).removeClass("is-valid");
+
+      $( "#CPF" ).removeClass("is-valid");
+      $( "#CPF" ).removeClass("is-invalid");
+
+      $( "#nome" ).removeClass("is-invalid");
+      $( "#nome" ).removeClass("is-valid");
+    });
 
     $('#example tbody').on( 'click', '#apagar', function () {
       var data = table.row( $(this).parents('tr') ).data();
@@ -544,10 +714,10 @@ else{
         }
       });
     }
-    else if (c === 'conta'){
+    else if (c === 'conta' || c === 'usuario'){
       $('#CPF').mask('000.000.000-00',{clearIfNotMatch: true});
       
-      $('#dataNasc').datepicker({
+      $('#dataDeNascimento').datepicker({
        maxViewMode: 2,
        todayBtn: "linked",
        language: "pt-BR",
@@ -557,11 +727,11 @@ else{
       
       $('#fotoPerfil').on('change',function(){
         var fileName = document.getElementById("fotoPerfil").files[0].name;
-        $(this).next('.custom-file-label').html(fileName);
+        $('.custom-file-label').text(fileName);
       })
       
-      $('#dataNasc').focusout(function(){
-        $( "#dataNasc" ).addClass("is-valid");
+      $('#dataDeNascimento').focusout(function(){
+        $( "#dataDeNascimento" ).addClass("is-valid");
       });
 
       $('#senha, #conf_senha').on('keyup focusout', function () {

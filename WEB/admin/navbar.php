@@ -83,6 +83,22 @@
               </li>
             </ul>
           </div>
+        </li>        
+        <li class="sidebar-dropdown">
+          <a href="#">
+            <i class="fas fa-door-closed"></i>
+            <span>Setores</span>
+          </a>
+          <div class="sidebar-submenu">
+            <ul>
+              <li>
+                <a href="setores.php?listar=home">Gerenciar Setores</a>
+              </li>               
+              <li>
+                <a href="setores_usuarios.php?listar=home">Gerenciar Setores/Usuários</a>
+              </li>              
+            </ul>
+          </div>
         </li>
         <?php
       }

@@ -2,7 +2,9 @@
 session_start();
 require_once('db.class.php');
 $banco = new db();
-    $resultado = $banco->seleciona2(hash('sha512', $_POST['senhaRFID']),$_POST['RFID']);
+    $senhaRFID = hash('sha512',$_POST['senhaRFID']);
+    $rfid = $_POST['RFID']; 
+    $resultado = $banco->seleciona('nome, tipoConta,CPF','usuario','where senha4 = "'.$senhaRFID.'" and TAGRFID = "'.$rfid.'"');
     $teste = $resultado->rowCount();
     if ($teste != 1){
         echo 'n cadastrado';

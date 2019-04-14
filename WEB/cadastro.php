@@ -4,25 +4,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	require_once('db.class.php');
 	$banco = new db();
-	$dados = array();
-	$dados['nome'] = $_POST['nome'];
-	$dados['cpf'] = $_POST['cpf'];
-	$dados['senha'] = hash('sha512', $_POST['senha']);
-	$dados['senha4'] = hash('sha512', $_POST['senha4']);
-	$dados['rfid'] = hash('sha512', $_POST['rfid']);
-	$dados['dataNasc']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
-	//var_dump($dados['dataNasc']);exit;
-	$diretorioFotoPerfil = '../fotosPerfil/';
-	$foto = $_FILES['fotoPerfil']['tmp_name'];
-	if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
-		$uploadfile = $diretorioFotoPerfil . $dados['cpf'] .'.png';
-		move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
-		$nomeArquivo = $_FILES['fotoPerfil']['name'];
-		$resultado = $banco->insere($dados);
-	}
-	else{
-		$_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
-	}
+ $dados = array();
+
+
+   $dados['nome'] = $_POST['nome'];
+   $dados['CPF'] = $_POST['cpf'];
+   $dados['senha'] = hash('sha512', $_POST['senha']);
+   $dados['senha4'] = hash('sha512', $_POST['senha4']);
+   $dados['dataDeNascimento']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
+   $dados['tagRFID'] = hash('sha512', $_POST['rfid']);
+
+ if ($_FILES['fotoPerfil']['tmp_name']){
+  $diretorioFotoPerfil = '../fotosPerfil/';
+  $foto = $_FILES['fotoPerfil']['tmp_name'];
+  if( in_array( $_FILES['fotoPerfil']['type'], array("image/jpeg") ) || in_array( $_FILES['fotoPerfil']['type'], array("image/png") )){
+    $uploadfile = $diretorioFotoPerfil . $dados['CPF'] .'.png';
+    move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $uploadfile);
+    $nomeArquivo = $_FILES['fotoPerfil']['name'];
+  }
+  else{
+   $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>A imagem anexada não é suportada!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+ }
+
+}
+  $campos = array_keys($dados);
+  $valor = count($dados);
+  for ($i=0; $i < $valor ; $i++) { 
+    $testequery[] = '?';
+  }
+  $contador = implode(" , ", $testequery);
+  $campos = implode(" , ", $campos);
+
+  $resultado = $banco->insere('usuario',$campos,$contador,$dados);
+
+if ($resultado == null){
+ $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Cadastrado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+ header("Location:login.php");
+}
 }
 ?>
 <head>

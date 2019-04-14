@@ -8,132 +8,75 @@ class db {
 		return $con;
 	}
 
-	function seleciona($valor){
+	function seleciona($campos,$tabela,$where){
 		$conexao = $this->conectar();
-		$sql  = "SELECT nome,status FROM usuario where TAGRFID = '$valor'";
-		$stmt = $conexao->prepare($sql);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		
-		return $stmt;
-	}
-	function seleciona1($cpf,$senha){
-		$conexao = $this->conectar();
-		$sql  = "SELECT nome, tipoConta,CPF FROM usuario where CPF = '$cpf' and senha = '$senha'";
-		$stmt = $conexao->prepare($sql);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		
-		return $stmt;
-	}
-	function seleciona2($senha,$RFID){
-		$conexao = $this->conectar();
-		$sql  = "SELECT nome, tipoConta,CPF FROM usuario where senha4 = '$senha' and TAGRFID = '$RFID'";
-		$stmt = $conexao->prepare($sql);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		
-		return $stmt;
-	}
-    function seleciona3($rfid){
-		$conexao = $this->conectar();
-		$sql = "select nome,status,sigla,cargo,U.CPF from usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor where u.TAGRFID = \"$rfid\"";
-		$stmt = $conexao->prepare($sql);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		
-		return $stmt;
-	}
-	function seleciona4($cpf){
-		$conexao = $this->conectar();
-		$sql = "select id,nome,CPF,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento from usuario where CPF = \"$cpf\"";
-		$stmt = $conexao->prepare($sql);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		
-		return $stmt;
-	}
-	function seleciona5(){
-		$conexao = $this->conectar();
-		$sql = "select id,nome,CPF,tipoConta,status,date_format(dataDeNascimento,'%d/%m/%Y') as dataDeNascimento from usuario";
-		$stmt = $conexao->prepare($sql);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		
-		return $stmt;
-	}
-
-    // nome,cpf,senha,senha4
-	function insere($dados){
 		try {
-			$conexao = $this->conectar();
-			$sql = "INSERT INTO usuario (nome, CPF, senha,senha4,dataDeNascimento,tagRFID) VALUES (?,?,?,?,?,?)";
-			$conexao->prepare($sql)->execute([$dados['nome'], $dados['cpf'], $dados['senha'],$dados['senha4'],$dados['dataNasc'],$dados['rfid']]);
-			$_SESSION['msg'] = "<div class='alert alert-success' style='text-align: center;' role='alert'>Usuário Cadastrado!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
-			header("Location:login.php");
-			exit();
+			$sql  = "SELECT ".$campos." FROM ".$tabela." ".$where."";
+			//var_dump($sql);exit;
+			$stmt = $conexao->prepare($sql);
+			$stmt->execute();
+			$stmt->setFetchMode(PDO::FETCH_ASSOC);
+			return $stmt;
 		}
 		catch (Exception $e) {
-			$_SESSION['msg'] = "<div class='alert alert-danger' style='text-align: center;' role='alert'>".$e."<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-text='true'>&times;</span></button></div>";
+			header('Content-Type: application/json');
+			echo json_encode($e);
+			exit;
+		}
+
+	}
+	function insere($nomeTabela,$campos,$qtdeCampos,$dados){
+		try {
+			$conexao = $this->conectar();
+			$sql = "INSERT INTO ".$nomeTabela." (".$campos.") VALUES (".$qtdeCampos.")";
+			$conexao->prepare($sql)->execute(array_values($dados));
+		}
+		catch (Exception $e) {
+			header('Content-Type: application/json');
+			echo json_encode($e);
+			exit;
 		}
 
 	}
 
-	function apaga($id){
+	function apaga($tabela,$campos,$dados){
 		try {
-  $conexao = $this->conectar();
-  $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-   
-  $stmt = $conexao->prepare('DELETE FROM usuario WHERE id = :id');
-  $stmt->bindParam(':id', $id); 
-  $stmt->execute();
-     
-  echo $stmt->rowCount(); 
-} catch(PDOException $e) {
-  echo 'Error: ' . $e->getMessage();
-}
+			$conexao = $this->conectar();
+			$conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$stmt = $conexao->prepare('DELETE FROM '.$tabela. ' WHERE '.$campos);
+			if (gettype($dados) == 'string'){
+				$stmt->bindParam(':id', $dados); 
+				$stmt->execute();
+			}
+			else{
+				$stmt->execute(array_values($dados));
+			}
+
+			echo $stmt->rowCount(); 
+		} catch(PDOException $e) {
+			header('Content-Type: application/json');
+			echo json_encode($e);
+			exit;
+		}
 	}
 
-	function altera($dados){
-
-// $dados[0] = nome;
-// $dados[1] = cpf;
-// $dados[2] = senha;
-// $dados[3] = senha4;
-// $dados[4] = rfid;
-// $dados[5] = dataNasc;
-// $dados[6] = id;
-// var_dump($dados);exit;
+	function altera($nomeTabela,$query,$dados){
 		try {   
-  $conexao = $this->conectar();
-  if ($_SESSION['permissao'] === 'adm'){
-  $stmt = $conexao->prepare('UPDATE usuario SET nome = :nome , CPF = :CPF , dataDeNascimento = :dataDeNascimento , tagRFID = :tagRFID , senha = :senha , senha4 = :senha4 WHERE id = :id');
-  $stmt->execute(array(
-    ':id'   => $dados['id'],
-    ':CPF' => $dados['cpf'],
-    ':nome' => $dados['nome'],
-    ':dataDeNascimento' => $dados['dataNasc'],
-    ':tagRFID' => $dados['rfid'],
-    'senha' => $dados['senha'],
-    'senha4' => $dados['senha4']
-  ));
-}
-else{
-  $stmt = $conexao->prepare('UPDATE usuario SET nome = :nome , dataDeNascimento = :dataDeNascimento , tagRFID = :tagRFID , senha = :senha , senha4 = :senha4 WHERE id = :id');
-  $stmt->execute(array(
-    ':id'   => $dados['id'],
-    ':nome' => $dados['nome'],
-    ':dataDeNascimento' => $dados['dataNasc'],
-    ':tagRFID' => $dados['rfid'],
-    'senha' => $dados['senha'],
-    'senha4' => $dados['senha4']
-  ));
-}
-     
-  echo $stmt->rowCount(); 
-} catch(PDOException $e) {
-  echo 'Error: ' . $e->getMessage();
-}
+			$conexao = $this->conectar();
+			if ($_SESSION['permissao'] === 'adm'){
+				$stmt = $conexao->prepare('UPDATE '.$nomeTabela.' SET '.$query);
+				$stmt->execute(array_values($dados));
+			}
+			else{
+				$stmt = $conexao->prepare('UPDATE '.$nomeTabela.' SET '.$query);
+				$stmt->execute(array_values($dados));
+			}
+
+		} catch(PDOException $e) {
+			header('Content-Type: application/json');
+			echo json_encode($e);
+			exit;
+		}
 
 	}
 

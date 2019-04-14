@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   $banco = new db();
     $usuario = $_POST['cpf'];
     $senha = hash('sha512', $_POST['senha']);
-    $resultado = $banco->seleciona1($usuario,$senha);
+    $resultado = $banco->seleciona('nome, tipoConta,CPF,id','usuario','where CPF = "'.$usuario.'" and senha = "'.$senha.'"');
     $teste = $resultado->rowCount();
     if ($teste != 1){
       $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>Login ou Senha incorretos!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     else{
       $_SESSION['atividade'] = time();
       $dados = $resultado->fetchAll();
+      $_SESSION['id'] = $dados[0]['id'];
       $_SESSION['nome'] = $dados[0]['nome'];
       $_SESSION['permissao'] = $dados[0]['tipoConta'];
       $_SESSION['cpf'] = $dados[0]['CPF'];
@@ -199,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         url: "autenticar.php?acao=lerRFIDSenha",
         success: function(msg){
            $( ".imagemRFID" ).remove();
-           $("#loading").html('<div style="text-align: center;"><form id="formRFID" autocomplete="off"><label class="align-content-center" for="senha">Senha</label><input type="password" id="senhaRFID" name="senhaRFID" class="form-control" placeholder="Digite a sua senha"><br/><input type="hidden" value="'+msg+'"  name="RFID" ><input type="submit" name="enviarRFID" id="enviarRFID"  class="btn btn-primary" value="Entrar"></div></form>');
+           $("#loading").html('<div style="text-align: center;"><form id="formRFID" autocomplete="off"><label class="align-content-center" for="senha">Senha</label><input type="password" id="senhaRFID" name="senhaRFID" class="form-control" placeholder="Digite a sua senha"><br/><input type="text" value="'+msg+'"  name="RFID" ><input type="submit" name="enviarRFID" id="enviarRFID"  class="btn btn-primary" value="Entrar"></div></form>');
         },
         error: function(msg){
           $( ".imagemRFID" ).remove();
