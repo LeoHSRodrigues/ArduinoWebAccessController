@@ -189,6 +189,7 @@ else if (isset($_GET['excluir']) && $_GET['excluir'] == 'usuario'){
   header("Location:setores.php?listar=home");
   $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
   header("Location:configuracoes.php?editar=usuario");
+  exit;
 }
 else if (isset($_GET['salvar']) && $_GET['salvar'] == 'conta')
 {
@@ -252,6 +253,7 @@ $resultado = $banco->altera('usuario',$query,$dados);
 if ($resultado == null){
  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Atualizado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header("Location:configuracoes.php?editar=usuario");
+ exit;
 }
 
 }
@@ -306,6 +308,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'novaConta')
 
  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Cadastrado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header("Location:configuracoes.php?editar=usuario");
+ exit;
 
 }
 ?>

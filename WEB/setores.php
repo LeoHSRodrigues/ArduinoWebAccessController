@@ -6,13 +6,14 @@ $banco = new db();
 if($_SESSION['permissao'] != 'adm'){
  $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>Você não tem permissao para acessar essa página!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header('Location:home.php');
+ exit;
 }
 
 else if (isset($_GET['listar']) && $_GET['listar'] == 'home'){
 
   $configuracoes = '
   <div class="text-center text-muted mb-4">
-  <p>EDITAR USUÁRIO</p>
+  <p>EDITAR SETORES</p>
   </div>
   
   <hr>
@@ -23,6 +24,7 @@ else if (isset($_GET['listar']) && $_GET['listar'] == 'home'){
   <th>ID</th>
   <th>Cod. Setor</th>
   <th>Nome do Setor</th>
+  <th>Computador Responsável</th>
   <th>Editar</th>
   <th>Apagar</th>
   <th>Cadastrar Usuario ao setor</th>
@@ -34,10 +36,11 @@ else if (isset($_GET['listar']) && $_GET['listar'] == 'home'){
 
 else if (isset($_GET['excluir']) && $_GET['excluir'] == 'setor'){
 
-$resultado = $banco->apaga('setor','id = :id', $_POST['id']);
+  $resultado = $banco->apaga('setor','id = :id', $_POST['id']);
 
   $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
   header("Location:setores.php?listar=home");
+  exit;
 }
 else if (isset($_GET['salvar']) && $_GET['salvar'] == 'conta')
 {
@@ -48,6 +51,9 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'conta')
  }   
  if (isset($_POST['idSetor']) && $_POST['idSetor'] != ''){
    $dados['idSetor'] = $_POST['idSetor'];
+ }   
+ if (isset($_POST['computadorSetor']) && $_POST['computadorSetor'] != ''){
+   $dados['computadorResponsavel'] = $_POST['computadorSetor'];
  }  
  $id = $_POST['id'];
  $campos = array_keys($dados);
@@ -59,13 +65,13 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'conta')
 }
 $testequery = implode(" , ", $testequery);
 $query = $testequery. ' where id = '.$id;
-//var_dump($query);exit;
 
 $resultado = $banco->altera('setor',$query,$dados);
 
 if ($resultado == null){
  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Atualizado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header("Location:setores.php?listar=home");
+ exit;
 }
 
 }
@@ -76,6 +82,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'novaConta')
 
   $dados['Sigla'] = $_POST['Sigla'];   
   $dados['idSetor'] = $_POST['idSetor'];
+  $dados['computadorResponsavel'] = $_POST['computadorSetor'];
   $campos = array_keys($dados);
 
   $valor = count($dados);
@@ -90,6 +97,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'novaConta')
   if ($resultado == null){
    $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Cadastrado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
    header("Location:setores.php?listar=home");
+   exit;
  }
 
 }
@@ -112,6 +120,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
   if ($resultado == null){
    $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Cadastrado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
    header("Location:setores.php?listar=home");
+   exit;
  }
 
 }
@@ -230,6 +239,16 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
                <div class="input-group-prepend">
                  <span class="input-group-text"><i class="far fa-address-card"></i></span>
                </div>
+               <input type="text" placeholder="Nome do Computador Responsável" required class="form-control" name="computadorSetor" id="computadorSetorAdicionar">
+               <span class="input-group-text"><a href="#" onclick="nomeComputador()"><i class="fas fa-question" data-placement="top" title="Digite o hostname do computador, ou clique neste ícone para saber o nome deste computador">Digite o hostname do computador, ou clique neste ícone para saber o nome deste computador</i></span></a>
+             </div>
+           </div>
+
+            <div class="form-group">
+             <div class="input-group input-group-alternative mb-3">
+               <div class="input-group-prepend">
+                 <span class="input-group-text"><i class="far fa-address-card"></i></span>
+               </div>
                <input class="form-control" value=""  data-toggle="tooltip" placeholder="Cod. do Setor" id="idSetor" name="idSetor" type="text">
              </div>
              <div class="text-center">
@@ -264,7 +283,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
               </div>
               <input class="form-control" value="" readonly placeholder="Nome do Setor" id="idSetorAdicionar" name="idSetor" type="text">
             </div>
-          </div>
+          </div>          
 
           <div class="form-group">
            <div class="input-group input-group-alternative mb-3">
@@ -301,6 +320,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
       { "data": "id",orderable: false, "visible": false},
       { "data": "idSetor" },
       { "data": "Sigla" },
+      { "data": "computadorResponsavel" },
       {
         data: null,
         orderable: false,
@@ -337,6 +357,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
       $('#idEditar').val('');
       $('#setor').val('');
       $('#idSetor').val('');
+      $('#computadorSetorAdicionar').val('');
       $('#setor').attr('required', true);
       $('#idSetor').attr('required', true);
       $('#meuForm').attr('action','setores.php?salvar=novaConta');
@@ -350,6 +371,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
       $('#idEditar').val(data.id);
       $('#setor').val(data.Sigla);
       $('#idSetor').val(data.idSetor);
+      $('#computadorSetorAdicionar').val(data.computadorResponsavel);
       $('#cadastrarBotao').html('Atualizar');
     } );   
 
@@ -390,5 +412,11 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
     });
 
   });
+</script>
+<script>
+  function nomeComputador(){
+    window.open('nomeComputador.php','mywin','width=500,height=200');
+  }
+
 </script>
 </html>

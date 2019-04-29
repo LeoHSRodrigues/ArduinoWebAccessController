@@ -26,7 +26,7 @@ if (isset($_GET['buscarSetor'])){
 if (isset($_GET['buscarSetorUsuario'])){
     require_once('db.class.php');
     $banco = new db();
-    $resultado = $banco->seleciona('nome,sigla,su.idSetor,U.CPF','usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor','where 1');
+    $resultado = $banco->seleciona('nome,sigla,su.idSetor,u.CPF','usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor','where 1');
     $dados['data'] = $resultado->fetchAll();
     header('Content-Type: application/json');
     echo json_encode($dados);

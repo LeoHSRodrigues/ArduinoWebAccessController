@@ -6,13 +6,14 @@ $banco = new db();
 if($_SESSION['permissao'] != 'adm'){
  $_SESSION['msg'] = "<div class='alert alert-danger' style='text-align:center;' role='alert'>Você não tem permissao para acessar essa página!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header('Location:home.php');
+ exit;
 }
 
 else if (isset($_GET['listar']) && $_GET['listar'] == 'home'){
 
   $configuracoes = '
   <div class="text-center text-muted mb-4">
-  <p>EDITAR USUÁRIO</p>
+  <p>EDITAR SETORES/USUÁRIO</p>
   </div>
   
   <hr>
@@ -47,6 +48,7 @@ $query = implode(" and ", $testequery);
   $resultado = $banco->apaga('setorusuario',$query,$dados);
   $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
   header("Location:setores_usuarios.php?listar=home");
+  exit;
 }
 ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">

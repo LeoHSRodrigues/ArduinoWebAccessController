@@ -93,16 +93,19 @@ require_once('sessao.php');
         type: "POST",
         url: "autenticar.php?acao=lerCatraca",
         success: function(msg){
-          if (msg != 'erro'){   
+          if (msg == 'erro'){   
+            $(".container-fluid").html("<div class='alert alert-danger' style='text-align:center;' role='alert'>Cartão Não Cadastrado<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+          }
+          else if (msg == 'n inserido'){
+            $(".container-fluid").empty();
+          }
+          else{
             var dados = JSON.parse(msg);
             $(".container-fluid").html('<div class="cards"><img src="../fotosPerfil/'+dados[0]['CPF']+'.png" alt="John" style="width:100%"><h3>'+dados[0]['nome']+'</h3><p class="titles">'+dados[0]['cargo']+'</p><p>'+dados[0]['sigla']+'</p><p><button class="botao">Informações</button></p></div>');
             $( ".cards" ).fadeOut( 8000, "linear");
 //        setTimeout(function (){
 //        $( ".cards" ).remove();
 //        }, 10000);
-}
-else{
-  $(".container-fluid").html("<div class='alert alert-danger' style='text-align:center;' role='alert'>Cartão Não Cadastrado<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
 }
 },
 complete: function () {

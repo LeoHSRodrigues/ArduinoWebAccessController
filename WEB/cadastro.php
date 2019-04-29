@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 if ($resultado == null){
  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Cadastrado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header("Location:login.php");
+ exit;
 }
 }
 ?>
