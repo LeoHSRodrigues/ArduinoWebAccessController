@@ -62,7 +62,7 @@ $serial->deviceSet("/dev/ttyACM0");
             $dados = $resultado->fetchAll();
 
             $valores['tagRFID'] = $valor;
-            $valores['data'] = date("Y-m-d H:i:s");
+            $valores['dataAcesso'] = date("Y-m-d H:i:s");
             $valores['idSetor'] = $dados[0]['idSetor'];
 
             $campos = array_keys($valores);

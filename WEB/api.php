@@ -31,5 +31,13 @@ if (isset($_GET['buscarSetorUsuario'])){
     header('Content-Type: application/json');
     echo json_encode($dados);
 }
+if (isset($_GET['buscarLogs'])){
+    require_once('db.class.php');
+    $banco = new db();
+    $resultado = $banco->seleciona('l.id,DATE_FORMAT(dataAcesso, "%d/%m/%Y %H:%i:%s") as dataAcesso,Sigla,nome','log as l inner join setor as s on l.idSetor = s.idSetor inner join usuario as u on l.tagRFID = u.tagRFID','where 1 order by id desc');
+    $dados['data'] = $resultado->fetchAll();
+    header('Content-Type: application/json');
+    echo json_encode($dados);
+}
 
 ?>

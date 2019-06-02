@@ -73,7 +73,7 @@
           <div class="sidebar-submenu">
             <ul>
               <li>
-                <a href="#">Gerenciar Logs</a>
+                <a href="log.php">Gerenciar Logs</a>
               </li>
               <li>
                 <a href="#">Gerenciar Funcionários</a>
