@@ -5,8 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	require_once('db.class.php');
 	$banco = new db();
  $dados = array();
-
-
    $dados['nome'] = $_POST['nome'];
    $dados['CPF'] = $_POST['cpf'];
    $dados['senha'] = hash('sha512', $_POST['senha']);
