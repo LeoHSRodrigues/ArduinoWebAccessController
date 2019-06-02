@@ -3,6 +3,7 @@ require_once('db.class.php');
 $banco = new db();
 session_start();
 include "PhpSerial.php";
+date_default_timezone_set('America/Sao_Paulo');
 
     // Let's start the class
 $serial = new phpSerial();
@@ -39,6 +40,7 @@ $serial->deviceSet("/dev/ttyACM0");
         }
     }
     else if (isset($_GET['acao']) && $_GET['acao'] == 'lerCatraca'){
+
     // ini_set('max_execution_time', 0.5);
     // $output = shell_exec('PowerShell -ExecutionPolicy Bypass -Command "'. __DIR__ .'\lerRFID.ps1"');
     // Then we need to open it
@@ -54,13 +56,13 @@ $serial->deviceSet("/dev/ttyACM0");
         $serial->deviceClose();
         $nomeComputador = gethostname();
         $valor = hash('sha512', trim($output));
-        $resultado = $banco->seleciona('nome,status,s.idSetor,sigla,cargo,U.CPF','usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor','where u.TAGRFID = "'.$valor.'" and computadorResponsavel = "'.$nomeComputador.'"');
+        $resultado = $banco->seleciona('nome,status,s.idSetor,sigla,cargo,u.CPF','usuario as u inner join setorusuario as su on u.CPF = su.CPF inner join setor as s on s.idSetor = su.idSetor','where u.TAGRFID = "'.$valor.'" and computadorResponsavel = "'.$nomeComputador.'"');
         $teste = $resultado->rowCount();
         if ($teste === 1){
             $dados = $resultado->fetchAll();
 
             $valores['tagRFID'] = $valor;
-            $valores['data'] = date();
+            $valores['data'] = date("Y-m-d H:i:s");
             $valores['idSetor'] = $dados[0]['idSetor'];
 
             $campos = array_keys($valores);

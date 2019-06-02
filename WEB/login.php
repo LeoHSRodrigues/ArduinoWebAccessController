@@ -200,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         url: "autenticar.php?acao=lerRFIDSenha",
         success: function(msg){
            $( ".imagemRFID" ).remove();
-           $("#loading").html('<div style="text-align: center;"><form id="formRFID" autocomplete="off"><label class="align-content-center" for="senha">Senha</label><input type="password" id="senhaRFID" name="senhaRFID" class="form-control" placeholder="Digite a sua senha"><br/><input type="text" value="'+msg+'"  name="RFID" ><input type="submit" name="enviarRFID" id="enviarRFID"  class="btn btn-primary" value="Entrar"></div></form>');
+           $("#loading").html('<div style="text-align: center;"><form id="formRFID" autocomplete="off"><label class="align-content-center" for="senha">Senha</label><input type="password" id="senhaRFID" name="senhaRFID" class="form-control" placeholder="Digite a sua senha"><br/><input type="hidden" value="'+msg+'"  name="RFID" ><input type="submit" name="enviarRFID" id="enviarRFID"  class="btn btn-primary" value="Entrar"></div></form>');
         },
         error: function(msg){
           $( ".imagemRFID" ).remove();

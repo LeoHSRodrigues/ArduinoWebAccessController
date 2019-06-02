@@ -38,7 +38,7 @@ else if (isset($_GET['excluir']) && $_GET['excluir'] == 'setor'){
 
   $resultado = $banco->apaga('setor','id = :id', $_POST['id']);
 
-  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+  $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Setor apagado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
   header("Location:setores.php?listar=home");
   exit;
 }
@@ -69,7 +69,7 @@ $query = $testequery. ' where id = '.$id;
 $resultado = $banco->altera('setor',$query,$dados);
 
 if ($resultado == null){
- $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Usuário Atualizado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+ $_SESSION['msg'] = "<div class='alert alert-success' style='text-align:center;' role='alert'>Setor Atualizado com sucesso!<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
  header("Location:setores.php?listar=home");
  exit;
 }
@@ -130,7 +130,7 @@ else if (isset($_GET['salvar']) && $_GET['salvar'] == 'setorUsuario')
 <link rel="stylesheet" type="text/css" href="../CSS/estilo.css">
 <link rel="stylesheet" type="text/css" href="../CSS/bootstrap-datepicker.min.css">
 <!-- <link rel="stylesheet" type="text/css" href="../Bibliotecas/Argon/css/argon.min.css" > -->
-<link rel="stylesheet" type="text/css" href="../CSS/dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="../CSS/datatables.min.css">
 <link rel="stylesheet" type="text/css" href="../Bibliotecas/Font-Awesome/css/all.min.css">
 <link href="../CSS/home.css" rel="stylesheet">
 <link rel="stylesheet" href="../Bibliotecas/Argon/vendor/nucleo/css/nucleo.css">

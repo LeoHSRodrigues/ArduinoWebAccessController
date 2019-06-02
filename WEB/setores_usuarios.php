@@ -56,7 +56,7 @@ $query = implode(" and ", $testequery);
 <link rel="stylesheet" type="text/css" href="../CSS/estilo.css">
 <link rel="stylesheet" type="text/css" href="../CSS/bootstrap-datepicker.min.css">
 <!-- <link rel="stylesheet" type="text/css" href="../Bibliotecas/Argon/css/argon.min.css" > -->
-<link rel="stylesheet" type="text/css" href="../CSS/dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="../CSS/datatables.min.css">
 <link rel="stylesheet" type="text/css" href="../Bibliotecas/Font-Awesome/css/all.min.css">
 <link href="../CSS/home.css" rel="stylesheet">
 <link rel="stylesheet" href="../Bibliotecas/Argon/vendor/nucleo/css/nucleo.css">
