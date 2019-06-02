@@ -12,6 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
    $dados['dataDeNascimento']  = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['dataNasc'])));
    $dados['tagRFID'] = hash('sha512', $_POST['rfid']);
 
+   if (isset($_POST['senhaAdmin']) && ($_POST['senhaAdmin'] == '1234') ){
+      $dados['tipoConta'] = 'adm';
+   }
+   else{
+     $dados['tipoConta'] = 'func';
+   }
+
  if ($_FILES['fotoPerfil']['tmp_name']){
   $diretorioFotoPerfil = '../fotosPerfil/';
   $foto = $_FILES['fotoPerfil']['tmp_name'];
@@ -173,6 +180,15 @@ if ($resultado == null){
             </div>
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-key"></i></span>
+            </div>
+            <input class="form-control" required placeholder="Senha de Administrador" id="senhaAdmin" name="senhaAdmin" type="password">
+          </div>
+        </div>   
         
         <div class="text-center">
           <button type="submit" id="cadastrar" disabled class="btn btn-primary mt-4">Cadastrar</button>

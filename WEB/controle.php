@@ -47,7 +47,7 @@ require_once('sessao.php');
   }
 
   .titles {
-    color: white;
+    color: black;
     font-size: 18px;
   }
 
